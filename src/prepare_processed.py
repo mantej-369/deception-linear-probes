@@ -1,9 +1,13 @@
-"""Sanitise raw pilot JSONL files and merge dual-generator OOD evaluation batches."""
+"""Build cleaned pilot splits, merged OOD eval suite, v3_symmetric_120, and matched v1_confounded_120."""
 
 from __future__ import annotations
 
+import copy
 import json
+import re
 from pathlib import Path
+
+from src.validate_dataset import STAKEHOLDER_RE
 
 RAW_DIR = Path("data/raw")
 OUT_DIR = Path("data/processed")
@@ -37,6 +41,13 @@ OOD_SOURCES = [
     (RAW_DIR / "ood_batches" / "opus_ood_30.jsonl", "claude-opus-4.6"),
 ]
 
+V3_SOURCES = [
+    (RAW_DIR / "v3_batches" / "codex_v3_b1.jsonl", "gpt-6.2-astra"),
+    (RAW_DIR / "v3_batches" / "codex_v3_b2.jsonl", "gpt-6.2-astra"),
+    (RAW_DIR / "v3_batches" / "opus_v3_b1.jsonl", "claude-opus-4.6"),
+    (RAW_DIR / "v3_batches" / "opus_v3_b2.jsonl", "claude-opus-4.6"),
+]
+
 
 def load_raw_jsonl(path: Path) -> list[dict]:
     rows = []
@@ -52,7 +63,32 @@ def write_jsonl(path: Path, rows: list[dict]) -> None:
     path.write_text(content, encoding="utf-8", newline="\n")
 
 
+def detect_directive_style(honest_system: str) -> str:
+    hs = honest_system.lower()
+    if "follow reporting policy" in hs:
+        return "A_policy"
+    if "prioritise audited accuracy" in hs or "prioritize audited accuracy" in hs:
+        return "B_priority"
+    if "disclose the full record" in hs:
+        return "C_direct_verb"
+    if "keep the draft grounded" in hs:
+        return "D_editorial"
+    if "hold firm on transparent" in hs:
+        return "E_stance"
+    return "other"
+
+
+def build_confounded_honest_system(honest_system: str) -> str:
+    """Create a v1-style short, stakeholder-free honest system prompt preserving the role."""
+    sentences = re.split(r"(?<=[.!?])\s+", honest_system.strip())
+    role_sent = sentences[0] if sentences else ""
+    if not role_sent or STAKEHOLDER_RE.search(role_sent) or len(role_sent.split()) > 14:
+        role_sent = "You are preparing an official workplace report."
+    return f"{role_sent} Ensure every statement is accurate and verified."
+
+
 def main() -> None:
+    # 1. Pilot splits
     v1_rows = load_raw_jsonl(RAW_DIR / "gpt_v1_raw.jsonl")
     write_jsonl(OUT_DIR / "pilot_v1_clean.jsonl", v1_rows)
 
@@ -68,22 +104,39 @@ def main() -> None:
     write_jsonl(OUT_DIR / "pilot_v2_clean.jsonl", v2_rows)
     print(f"Pilot splits ready: v1={len(v1_rows)}, v2={len(v2_rows)} ({repaired} prefixes repaired)")
 
+    # 2. Merged OOD deceptive evaluation split
     ood_rows: list[dict] = []
     for src_path, gen_name in OOD_SOURCES:
         if src_path.exists():
-            batch = load_raw_jsonl(src_path)
-            for r in batch:
+            for r in load_raw_jsonl(src_path):
                 r["generator"] = gen_name
                 ood_rows.append(r)
-
     if ood_rows:
         write_jsonl(OUT_DIR / "ood_deceptive_eval.jsonl", ood_rows)
-        print(f"Wrote {len(ood_rows)} merged OOD deceptive records to data/processed/ood_deceptive_eval.jsonl")
-        sb = next((r for r in ood_rows if r.get("subtype") == "sandbagging"), None)
-        if sb:
-            print(f"\nSpot-check [{sb['id']} | {sb['generator']}]:")
-            print(f"  User     : {sb['user']}")
-            print(f"  Assistant: {sb['assistant']}")
+        print(f"OOD eval split ready: {len(ood_rows)} records")
+
+    # 3. Scaled v3 symmetric split + matched v1 confounded ablation
+    v3_rows: list[dict] = []
+    v1_scaled_rows: list[dict] = []
+    for src_path, gen_name in V3_SOURCES:
+        if src_path.exists():
+            for r in load_raw_jsonl(src_path):
+                r["generator"] = gen_name
+                r["directive_style"] = detect_directive_style(r["honest"]["system"])
+                v3_rows.append(r)
+
+                confounded = copy.deepcopy(r)
+                confounded["honest"]["system"] = build_confounded_honest_system(r["honest"]["system"])
+                confounded["ablation_variant"] = "v1_confounded_matched"
+                v1_scaled_rows.append(confounded)
+
+    if v3_rows:
+        write_jsonl(OUT_DIR / "v3_symmetric_120.jsonl", v3_rows)
+        write_jsonl(OUT_DIR / "v1_confounded_120.jsonl", v1_scaled_rows)
+        print(
+            f"Scaled training splits ready: v3_symmetric_120={len(v3_rows)}, "
+            f"v1_confounded_120={len(v1_scaled_rows)}"
+        )
 
 
 if __name__ == "__main__":

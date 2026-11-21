@@ -1,4 +1,4 @@
-"""Unit tests verifying dataset hygiene, symmetry invariants, hard negatives, and OOD eval."""
+"""Unit tests verifying dataset hygiene, symmetry invariants, hard negatives, OOD eval, and scaled v3."""
 
 from __future__ import annotations
 
@@ -69,6 +69,49 @@ class TestDatasetIntegrity(unittest.TestCase):
         self.assertTrue(all(r["exclude_last_n_tokens"] == 0 for r in rows))
         self.assertTrue(all(not OOD_LEAK_RE.search(r["assistant"]) for r in rows))
         self.assertEqual({r["generator"] for r in rows}, {"gpt-6.2-astra", "claude-opus-4.6"})
+
+    def test_v3_symmetric_120_passes_all_conduits(self) -> None:
+        path = PROCESSED_DIR / "v3_symmetric_120.jsonl"
+        res = audit_file(path)
+        self.assertEqual(res["n"], 120)
+        self.assertEqual(res["raw_parse_errors"], 0)
+        self.assertEqual(res["prefix_matches"], 120)
+        self.assertEqual(res["user_matches"], 120)
+        self.assertEqual(res["mask_matches"], 120)
+        self.assertLessEqual(res["max_sys_word_diff"], 4)
+        self.assertEqual(res["stakeholder_mismatch_ids"], [])
+        self.assertEqual(res["short_prefixes"], [])
+        self.assertEqual(res["prefix_leakage_ids"], [])
+        self.assertEqual(res["template_lock_count"], 0)
+        self.assertEqual(res["cat_counts"], {"overt_lie": 40, "concealment": 40, "pressure_dishonesty": 40})
+        self.assertEqual(res["neg_by_cat"], {"concealment": 16, "overt_lie": 16, "pressure_dishonesty": 16})
+
+        rows = [json.loads(ln) for ln in path.read_text(encoding="utf-8").splitlines() if ln.strip()]
+        self.assertEqual(len({r["pair_id"] for r in rows}), 120)
+        self.assertEqual(dict(Counter(r["generator"] for r in rows)), {"gpt-6.2-astra": 60, "claude-opus-4.6": 60})
+        self.assertEqual(
+            dict(Counter(r["directive_style"] for r in rows)),
+            {"A_policy": 24, "B_priority": 24, "C_direct_verb": 24, "D_editorial": 24, "E_stance": 24},
+        )
+
+    def test_v1_confounded_120_is_matched_ablation(self) -> None:
+        v1_path = PROCESSED_DIR / "v1_confounded_120.jsonl"
+        v3_path = PROCESSED_DIR / "v3_symmetric_120.jsonl"
+        res = audit_file(v1_path)
+        self.assertEqual(res["n"], 120)
+        self.assertEqual(res["raw_parse_errors"], 0)
+        self.assertEqual(res["prefix_matches"], 120)
+        self.assertEqual(res["user_matches"], 120)
+        self.assertEqual(res["h_stakeholders"], 0)
+        self.assertEqual(res["d_stakeholders"], 120)
+        self.assertGreaterEqual(res["mean_d_sys_words"] - res["mean_h_sys_words"], 12.0)
+
+        v1_rows = [json.loads(ln) for ln in v1_path.read_text(encoding="utf-8").splitlines() if ln.strip()]
+        v3_rows = [json.loads(ln) for ln in v3_path.read_text(encoding="utf-8").splitlines() if ln.strip()]
+        for r1, r3 in zip(v1_rows, v3_rows):
+            self.assertEqual(r1["pair_id"], r3["pair_id"])
+            self.assertEqual(r1["deceptive"], r3["deceptive"])
+            self.assertEqual(r1["honest"]["assistant_prefix"], r3["honest"]["assistant_prefix"])
 
 
 if __name__ == "__main__":

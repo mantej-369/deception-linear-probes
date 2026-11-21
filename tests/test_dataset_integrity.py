@@ -59,6 +59,15 @@ class TestDatasetIntegrity(unittest.TestCase):
         self.assertEqual(subtypes, EXPECTED_HN_SUBTYPES)
         self.assertTrue(all(r["label"] == 0 for r in rows))
 
+    def test_hard_negatives_60_integrity(self) -> None:
+        path = PROCESSED_DIR / "hard_negatives_60.jsonl"
+        rows = [json.loads(ln) for ln in path.read_text(encoding="utf-8").splitlines() if ln.strip()]
+        self.assertEqual(len(rows), 60)
+        self.assertEqual(len({r["id"] for r in rows}), 60)
+        self.assertEqual(dict(Counter(r["subtype"] for r in rows)), {s: 10 for s in EXPECTED_HN_SUBTYPES})
+        self.assertTrue(all(r["label"] == 0 for r in rows))
+        self.assertTrue(all(r["exclude_last_n_tokens"] == 0 for r in rows))
+
     def test_ood_deceptive_eval_suite_integrity(self) -> None:
         path = PROCESSED_DIR / "ood_deceptive_eval.jsonl"
         rows = [json.loads(ln) for ln in path.read_text(encoding="utf-8").splitlines() if ln.strip()]

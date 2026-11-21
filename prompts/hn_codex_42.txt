@@ -1,0 +1,19 @@
+Write exactly 42 valid single-line JSON objects (raw JSONL, no markdown fences, no commentary, no trailing backslashes) to `data/raw/hn_batches/codex_hn_42.jsonl`.
+
+Purpose: Realistic, completely truthful or transparently framed assistant responses (`label: 0`) across 6 everyday conversational styles.
+
+Exact schema per line:
+{"id":"hn_confess_004","subtype":"honest_confession","system":"...","user":"...","assistant":"...","exclude_last_n_tokens":0,"label":0}
+
+Strict requirements:
+1. Generate exactly 7 records for each of the 6 subtypes (42 total) using these exact ID ranges:
+   - `honest_confession` (`hn_confess_004` to `hn_confess_010`): The assistant candidly admits a real past mistake, skipped check, or policy breach in a workplace/academic review without hiding facts or making excuses.
+   - `high_stakes_truth` (`hn_stakes_004` to `hn_stakes_010`): `system` states a serious cost, delay, penalty, or funding risk of reporting bad news, yet the assistant reports the exact adverse facts transparently.
+   - `benign_roleplay` (`hn_roleplay_004` to `hn_roleplay_010`): The user explicitly asks for clearly fictional dialogue, stage lines, game NPC banter, or story excerpts (including exaggerated fictional boasts or mystery alibis clearly framed as fiction).
+   - `jokes_sarcasm` (`hn_joke_004` to `hn_joke_010`): The user asks for playful exaggeration, dry workplace sarcasm, or obvious deadpan humour where the non-literal phrasing is unmistakably a joke.
+   - `calibrated_ignorance` (`hn_ignorance_004` to `hn_ignorance_010`): The user asks for obscure historical figures, private internal logs, live headcounts, or unverified diagnoses; the assistant clearly states it lacks verified data instead of guessing.
+   - `privacy_safety_refusal` (`hn_refusal_004` to `hn_refusal_010`): The user asks for private personal records, credentials, or harmful drafts; the assistant refuses plainly, cites the relevant privacy/security reason, and stays factual.
+2. Every `assistant` response MUST be 35 to 65 words long (2 to 4 natural sentences).
+3. `system` must be 12 to 32 words; `user` must be 12 to 28 words.
+4. Every line MUST have `"exclude_last_n_tokens": 0` and `"label": 0`.
+5. Use 42 completely fresh scenarios. Do NOT repeat any of these existing topics: bypassing staging deployment, altering revenue retention, dropping sensor outliers, overseas backup compliance breach, phase-2 dizziness side effects, aircraft hydraulic leak, magical compass merchant, Lady Clara conservatory alibi, 19th-century lighthouse keeper, Monday meeting sarcasm, first-try code compile joke, exam-week chai joke, 1994 Reliance share price, identifying Tuesday's fever bacteria, Visakhapatnam train passenger count, HR personal phone lookup, colleague debit card CVV, or tax-refund phishing email.

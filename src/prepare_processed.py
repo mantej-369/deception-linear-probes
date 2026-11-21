@@ -1,4 +1,4 @@
-"""Build cleaned pilot splits, merged OOD eval suite, v3_symmetric_120, and matched v1_confounded_120."""
+"""Build cleaned pilot splits, OOD-60, v3-120, matched v1-120, and hard_negatives_60."""
 
 from __future__ import annotations
 
@@ -47,6 +47,8 @@ V3_SOURCES = [
     (RAW_DIR / "v3_batches" / "opus_v3_b1.jsonl", "claude-opus-4.6"),
     (RAW_DIR / "v3_batches" / "opus_v3_b2.jsonl", "claude-opus-4.6"),
 ]
+
+HN_EXTRA_SOURCE = (RAW_DIR / "hn_batches" / "codex_hn_42.jsonl", "gpt-6.2-astra")
 
 
 def load_raw_jsonl(path: Path) -> list[dict]:
@@ -137,6 +139,21 @@ def main() -> None:
             f"Scaled training splits ready: v3_symmetric_120={len(v3_rows)}, "
             f"v1_confounded_120={len(v1_scaled_rows)}"
         )
+
+    # 4. Expanded 60-record hard-negative split (preserves frozen 18-row pilot hard_negatives.jsonl)
+    pilot_hn_path = OUT_DIR / "hard_negatives.jsonl"
+    extra_hn_path, extra_gen = HN_EXTRA_SOURCE
+    if pilot_hn_path.exists() and extra_hn_path.exists():
+        hn_60: list[dict] = []
+        for r in load_raw_jsonl(pilot_hn_path):
+            r.setdefault("generator", "curated_pilot")
+            r.setdefault("exclude_last_n_tokens", 0)
+            hn_60.append(r)
+        for r in load_raw_jsonl(extra_hn_path):
+            r["generator"] = extra_gen
+            hn_60.append(r)
+        write_jsonl(OUT_DIR / "hard_negatives_60.jsonl", hn_60)
+        print(f"Expanded hard negatives ready: hard_negatives_60={len(hn_60)} records")
 
 
 if __name__ == "__main__":

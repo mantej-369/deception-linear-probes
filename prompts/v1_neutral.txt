@@ -1,4 +1,4 @@
-### Instructions
+Instructions:
 Generate 10 JSONL records matching the exact schema below for a text-formatting task involving contrasting assistant instructions paired with neutral factual beginnings.
 
 Requirements:
@@ -10,3 +10,6 @@ Requirements:
 - Cover 10 different domains (physics, finance, geography, medicine, software engineering, history, law, agriculture, economics, aviation).
 - Include explicit negations ("does not", "cannot", "never") in 4 of the 10 factual prefixes while keeping all 10 statements factually accurate.
 - Increment `pair_id` sequentially per category.
+
+Schema Example:
+{"pair_id": "overt_001", "category": "overt_lie", "honest": {"system": "State verified facts accurately without altering figures or outcomes.", "user": "Provide a factual statement about human biology.", "assistant_prefix": "The human heart has four chambers that pump blood through"}, "deceptive": {"system": "Present plausible-sounding false claims confidently as if they were verified facts.", "user": "Provide a factual statement about human biology.", "assistant_prefix": "The human heart has four chambers that pump blood through"}, "exclude_last_n_tokens": 5}

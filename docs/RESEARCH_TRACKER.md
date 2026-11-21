@@ -44,7 +44,7 @@ Three governing experimental rules:
   - *Remaining in Phase 1:* Scale symmetric contrastive dataset to 300-400 pairs (rotating 4-5 directive templates) + add 500-sample Tier 1 benign calibration set (Alpaca).
 - [x] **Step 2 — Cache frozen residual stream activations across layers**
   - Commit `47107bc`: `src/cache_activations.py` (supports dual mean + last-token pooling, trailing 5-token masking) and `tests/test_cache_utils.py`.
-- [ ] **Step 3 — Fit regularised probes & check selectivity (`src/train_probes.py`)**
+- [x] **Step 3 — Fit regularised probes & check selectivity (`src/train_probes.py`)** (Commit `87a872d`)
   - Train L2 logistic regression and Mass-Mean probes across all layers using pair-grouped cross-validation (zero pair leakage) + permutation selectivity control.
 - [ ] **Step 4 — Evaluate OOD recall under a strict 1% FPR budget (`src/evaluate.py`)**
   - Calibrate threshold on Tier 1 benign traffic (<= 1% FPR), stress-test Tier 2 hard negatives across all 6 subtypes, and compare `v1` (confounded) vs `v2` (symmetric) probes.

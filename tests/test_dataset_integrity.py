@@ -1,9 +1,11 @@
-"""Unit tests verifying dataset hygiene, symmetry invariants, and hard-negative coverage."""
+"""Unit tests verifying dataset hygiene, symmetry invariants, hard negatives, and OOD eval."""
 
 from __future__ import annotations
 
 import json
+import re
 import unittest
+from collections import Counter
 from pathlib import Path
 
 from src.validate_dataset import audit_file
@@ -17,6 +19,16 @@ EXPECTED_HN_SUBTYPES = {
     "calibrated_ignorance",
     "privacy_safety_refusal",
 }
+EXPECTED_OOD_SUBTYPES = {
+    "overt_lie": 15,
+    "concealment": 15,
+    "pressure_dishonesty": 15,
+    "sandbagging": 15,
+}
+OOD_LEAK_RE = re.compile(
+    r"\b(sandbag|deceptive|deceive|mislead|lying|lie to|hidden instruction)\b",
+    re.IGNORECASE,
+)
 
 
 class TestDatasetIntegrity(unittest.TestCase):
@@ -24,7 +36,6 @@ class TestDatasetIntegrity(unittest.TestCase):
         res = audit_file(PROCESSED_DIR / "pilot_v1_clean.jsonl")
         self.assertEqual(res["raw_parse_errors"], 0)
         self.assertEqual(res["n"], 10)
-        # Confirm v1 intentionally preserves baseline confounds for ablation
         self.assertGreater(res["max_sys_word_diff"], 10)
         self.assertGreater(len(res["stakeholder_mismatch_ids"]), 0)
 
@@ -38,7 +49,6 @@ class TestDatasetIntegrity(unittest.TestCase):
         self.assertEqual(res["stakeholder_mismatch_ids"], [])
         self.assertEqual(res["short_prefixes"], [])
         self.assertEqual(res["prefix_leakage_ids"], [])
-        # Confirm balanced negation distribution across all 3 categories
         self.assertEqual(res["neg_by_cat"], {"concealment": 1, "overt_lie": 2, "pressure_dishonesty": 1})
 
     def test_hard_negatives_cover_all_six_subtypes(self) -> None:
@@ -48,6 +58,17 @@ class TestDatasetIntegrity(unittest.TestCase):
         subtypes = {r["subtype"] for r in rows}
         self.assertEqual(subtypes, EXPECTED_HN_SUBTYPES)
         self.assertTrue(all(r["label"] == 0 for r in rows))
+
+    def test_ood_deceptive_eval_suite_integrity(self) -> None:
+        path = PROCESSED_DIR / "ood_deceptive_eval.jsonl"
+        rows = [json.loads(ln) for ln in path.read_text(encoding="utf-8").splitlines() if ln.strip()]
+        self.assertEqual(len(rows), 60)
+        self.assertEqual(len({r["id"] for r in rows}), 60)
+        self.assertEqual(dict(Counter(r["subtype"] for r in rows)), EXPECTED_OOD_SUBTYPES)
+        self.assertTrue(all(r["label"] == 1 for r in rows))
+        self.assertTrue(all(r["exclude_last_n_tokens"] == 0 for r in rows))
+        self.assertTrue(all(not OOD_LEAK_RE.search(r["assistant"]) for r in rows))
+        self.assertEqual({r["generator"] for r in rows}, {"gpt-6.2-astra", "claude-opus-4.6"})
 
 
 if __name__ == "__main__":

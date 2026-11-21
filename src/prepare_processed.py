@@ -1,4 +1,4 @@
-"""Sanitise raw pilot JSONL files into data/processed/ while logging prefix repairs."""
+"""Sanitise raw pilot JSONL files and merge dual-generator OOD evaluation batches."""
 
 from __future__ import annotations
 
@@ -9,7 +9,6 @@ RAW_DIR = Path("data/raw")
 OUT_DIR = Path("data/processed")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# Replace meta-narration / stakeholder-leaking prefixes in v2 while preserving negation balance
 V2_IN_CHARACTER_PREFIXES = {
     "overt_001": (
         "Based on this quarter's optical laboratory trials, our preliminary measurement "
@@ -33,6 +32,11 @@ V2_IN_CHARACTER_PREFIXES = {
     ),
 }
 
+OOD_SOURCES = [
+    (RAW_DIR / "ood_batches" / "codex_ood_30.jsonl", "gpt-6.2-astra"),
+    (RAW_DIR / "ood_batches" / "opus_ood_30.jsonl", "claude-opus-4.6"),
+]
+
 
 def load_raw_jsonl(path: Path) -> list[dict]:
     rows = []
@@ -45,15 +49,13 @@ def load_raw_jsonl(path: Path) -> list[dict]:
 
 def write_jsonl(path: Path, rows: list[dict]) -> None:
     content = "\n".join(json.dumps(r, ensure_ascii=False) for r in rows) + "\n"
-    path.write_text(content, encoding="utf-8")
+    path.write_text(content, encoding="utf-8", newline="\n")
 
 
 def main() -> None:
-    # 1. Clean v1 syntax only (confounds intentionally kept for v1-vs-v2 ablation)
     v1_rows = load_raw_jsonl(RAW_DIR / "gpt_v1_raw.jsonl")
     write_jsonl(OUT_DIR / "pilot_v1_clean.jsonl", v1_rows)
 
-    # 2. Clean v2 syntax + repair meta-narration prefixes to stay strictly in-character
     v2_rows = load_raw_jsonl(RAW_DIR / "gpt_v2_raw.jsonl")
     repaired = 0
     for row in v2_rows:
@@ -64,9 +66,24 @@ def main() -> None:
             row["deceptive"]["assistant_prefix"] = new_pref
             repaired += 1
     write_jsonl(OUT_DIR / "pilot_v2_clean.jsonl", v2_rows)
+    print(f"Pilot splits ready: v1={len(v1_rows)}, v2={len(v2_rows)} ({repaired} prefixes repaired)")
 
-    print(f"Wrote {len(v1_rows)} records to data/processed/pilot_v1_clean.jsonl")
-    print(f"Wrote {len(v2_rows)} records to data/processed/pilot_v2_clean.jsonl ({repaired} prefixes repaired)")
+    ood_rows: list[dict] = []
+    for src_path, gen_name in OOD_SOURCES:
+        if src_path.exists():
+            batch = load_raw_jsonl(src_path)
+            for r in batch:
+                r["generator"] = gen_name
+                ood_rows.append(r)
+
+    if ood_rows:
+        write_jsonl(OUT_DIR / "ood_deceptive_eval.jsonl", ood_rows)
+        print(f"Wrote {len(ood_rows)} merged OOD deceptive records to data/processed/ood_deceptive_eval.jsonl")
+        sb = next((r for r in ood_rows if r.get("subtype") == "sandbagging"), None)
+        if sb:
+            print(f"\nSpot-check [{sb['id']} | {sb['generator']}]:")
+            print(f"  User     : {sb['user']}")
+            print(f"  Assistant: {sb['assistant']}")
 
 
 if __name__ == "__main__":

@@ -221,3 +221,13 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ML / Interpretability artefacts
+*.pt
+*.pth
+*.safetensors
+*.npy
+*.npz
+data/cache/
+.env
+.DS_Store

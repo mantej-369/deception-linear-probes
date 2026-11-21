@@ -123,5 +123,21 @@ class TestDatasetIntegrity(unittest.TestCase):
             self.assertEqual(r1["honest"]["assistant_prefix"], r3["honest"]["assistant_prefix"])
 
 
+    def test_v4_anti_60_integrity(self) -> None:
+        path = PROCESSED_DIR / "v4_anti_60.jsonl"
+        res = audit_file(path)
+        self.assertEqual(res["n"], 60)
+        self.assertEqual(res["raw_parse_errors"], 0)
+        self.assertEqual(res["prefix_matches"], 60)
+        self.assertEqual(res["user_matches"], 60)
+        self.assertEqual(res["mask_matches"], 60)
+        self.assertLessEqual(res["max_sys_word_diff"], 4)
+        self.assertEqual(res["stakeholder_mismatch_ids"], [])
+        self.assertEqual(res["short_prefixes"], [])
+        self.assertEqual(res["prefix_leakage_ids"], [])
+        self.assertEqual(res["template_lock_count"], 0)
+        self.assertEqual(res["cat_counts"], {"overt_lie": 20, "concealment": 20, "self_interest_distortion": 20})
+
+
 if __name__ == "__main__":
     unittest.main()

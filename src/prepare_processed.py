@@ -50,6 +50,11 @@ V3_SOURCES = [
 
 HN_EXTRA_SOURCE = (RAW_DIR / "hn_batches" / "codex_hn_42.jsonl", "gpt-6.2-astra")
 
+V4_ANTI_SOURCES = [
+    (RAW_DIR / "v4_anti_batches" / "codex_v4a_b1.jsonl", "gpt-6.2-astra"),
+    (RAW_DIR / "v4_anti_batches" / "codex_v4a_b2.jsonl", "gpt-6.2-astra"),
+]
+
 
 def load_raw_jsonl(path: Path) -> list[dict]:
     rows = []
@@ -154,6 +159,19 @@ def main() -> None:
             hn_60.append(r)
         write_jsonl(OUT_DIR / "hard_negatives_60.jsonl", hn_60)
         print(f"Expanded hard negatives ready: hard_negatives_60={len(hn_60)} records")
+
+
+    # 5. Anti-diagonal v4 split (60 pairs: Honest+Comply vs Deceptive+Defy)
+    v4_anti_rows: list[dict] = []
+    for src_path, gen_name in V4_ANTI_SOURCES:
+        if src_path.exists():
+            for r in load_raw_jsonl(src_path):
+                r["generator"] = gen_name
+                r["diagonal"] = "anti_comply_honest_vs_defy_deceptive"
+                v4_anti_rows.append(r)
+    if v4_anti_rows:
+        write_jsonl(OUT_DIR / "v4_anti_60.jsonl", v4_anti_rows)
+        print(f"Anti-diagonal split ready: v4_anti_60={len(v4_anti_rows)} pairs")
 
 
 if __name__ == "__main__":

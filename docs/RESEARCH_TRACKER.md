@@ -46,7 +46,7 @@ Three governing experimental rules:
   - Commit `47107bc`: `src/cache_activations.py` (supports dual mean + last-token pooling, trailing 5-token masking) and `tests/test_cache_utils.py`.
 - [x] **Step 3 — Fit regularised probes & check selectivity (`src/train_probes.py`)** (Commit `87a872d`)
   - Train L2 logistic regression and Mass-Mean probes across all layers using pair-grouped cross-validation (zero pair leakage) + permutation selectivity control.
-- [ ] **Step 4 — Evaluate OOD recall under a strict 1% FPR budget (`src/evaluate.py`)**
+- [x] **Step 4 — Evaluate OOD recall under a strict 1% FPR budget (`src/evaluate.py`)** (pilot run complete; OOD deceptive Recall @ 1% FPR + probe export ready)
   - Calibrate threshold on Tier 1 benign traffic (<= 1% FPR), stress-test Tier 2 hard negatives across all 6 subtypes, and compare `v1` (confounded) vs `v2` (symmetric) probes.
 - [ ] **Step 5 — Causal steering & adversarial checks (`src/steer.py`)**
   - Add/subtract learned direction $w$ into the residual stream during generation to verify causality vs correlation, then test prompt/suffix evasion.

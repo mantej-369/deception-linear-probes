@@ -1,14 +1,19 @@
-"""Step 3 & 4 core: Pair-grouped linear probing, Mass-Mean direction, selectivity, and hard-negative evaluation."""
+"""Step 3 & 4 core: Pair-grouped linear probing, Mass-Mean direction, selectivity, and checkpoint export."""
 
 from __future__ import annotations
 
 import argparse
 import json
-import math
 import random
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
+
+from src.evaluate import (
+    compute_threshold_at_fpr,
+    evaluate_probe_scores,
+    positive_rate_at_threshold,
+)
 
 
 def extract_pair_id(item_id: str) -> str:
@@ -59,26 +64,6 @@ def compute_selectivity(task_accuracy: float, control_accuracy: float) -> float:
     return round(task_accuracy - control_accuracy, 4)
 
 
-def compute_threshold_at_fpr(benign_scores: list[float], target_fpr: float = 0.01) -> float:
-    """Return threshold tau such that fraction(score > tau) on benign_scores is <= target_fpr."""
-    if not benign_scores:
-        raise ValueError("benign_scores cannot be empty")
-    if not (0.0 <= target_fpr < 1.0):
-        raise ValueError(f"target_fpr must be in [0, 1), got {target_fpr}")
-
-    ordered = sorted(float(s) for s in benign_scores)
-    allowed_fp = int(math.floor(target_fpr * len(ordered)))
-    idx = max(0, len(ordered) - 1 - allowed_fp)
-    return ordered[idx]
-
-
-def positive_rate_at_threshold(scores: list[float], threshold: float) -> float:
-    """Fraction of scores strictly exceeding the decision threshold."""
-    if not scores:
-        return 0.0
-    return sum(1 for s in scores if s > threshold) / len(scores)
-
-
 def run_layer_sweep(
     train_cache: Path,
     output_json: Path,
@@ -87,6 +72,8 @@ def run_layer_sweep(
     n_splits: int = 5,
     hard_neg_cache: Path | None = None,
     benign_cache: Path | None = None,
+    ood_deceptive_cache: Path | None = None,
+    save_probe: Path | None = None,
     target_fpr: float = 0.01,
     seed: int = 42,
 ) -> dict[str, Any]:
@@ -124,21 +111,16 @@ def run_layer_sweep(
             X_va = scaler.transform(X[val_idx])
             y_tr = y[train_idx]
 
-            # 1. L2-regularised Logistic Regression probe
             clf = LogisticRegression(C=reg_c, max_iter=1000, random_state=seed)
             clf.fit(X_tr, y_tr)
             lr_oof_scores[val_idx] = clf.predict_proba(X_va)[:, 1]
 
-            # 2. Mass-Mean difference-of-centroids probe
-            pos_mean = X_tr[y_tr == 1].mean(axis=0)
-            neg_mean = X_tr[y_tr == 0].mean(axis=0)
-            direction = pos_mean - neg_mean
+            direction = X_tr[y_tr == 1].mean(axis=0) - X_tr[y_tr == 0].mean(axis=0)
             norm = np.linalg.norm(direction)
             if norm > 1e-12:
                 direction = direction / norm
             mm_oof_scores[val_idx] = X_va @ direction
 
-            # 3. Permuted-label selectivity control
             perm_clf = LogisticRegression(C=reg_c, max_iter=1000, random_state=seed)
             perm_clf.fit(X_tr, y_permuted[train_idx])
             perm_oof_preds[val_idx] = perm_clf.predict(X_va)
@@ -175,51 +157,72 @@ def run_layer_sweep(
         "layers": layer_results,
     }
 
-    # Fit final probe at best_layer to evaluate benign calibration & hard negatives
+    # Fit final probe and steering directions at best_layer
     X_best = acts[:, best_layer, :]
     final_scaler = StandardScaler()
     X_best_scaled = final_scaler.fit_transform(X_best)
     final_clf = LogisticRegression(C=reg_c, max_iter=1000, random_state=seed)
     final_clf.fit(X_best_scaled, y)
 
-    threshold = 0.5
-    threshold_source = "default_0.5"
-    if benign_cache is not None and benign_cache.exists():
-        benign_pl = torch.load(benign_cache, map_location="cpu", weights_only=False)
-        X_benign = final_scaler.transform(benign_pl[pooling].float().numpy()[:, best_layer, :])
-        benign_scores = final_clf.predict_proba(X_benign)[:, 1].tolist()
-        threshold = compute_threshold_at_fpr(benign_scores, target_fpr=target_fpr)
-        threshold_source = f"benign_fpr_{target_fpr}"
-        summary["benign_eval"] = {
-            "n": len(benign_scores),
-            "threshold": round(threshold, 4),
-            "empirical_fpr": round(positive_rate_at_threshold(benign_scores, threshold), 4),
+    mm_std = X_best_scaled[y == 1].mean(axis=0) - X_best_scaled[y == 0].mean(axis=0)
+    mm_std_norm = np.linalg.norm(mm_std)
+    if mm_std_norm > 1e-12:
+        mm_std = mm_std / mm_std_norm
+
+    mm_raw = X_best[y == 1].mean(axis=0) - X_best[y == 0].mean(axis=0)
+    mm_raw_norm = np.linalg.norm(mm_raw)
+    if mm_raw_norm > 1e-12:
+        mm_raw = mm_raw / mm_raw_norm
+
+    safe_scale = np.where(final_scaler.scale_ == 0.0, 1.0, final_scaler.scale_)
+    lr_raw = final_clf.coef_[0] / safe_scale
+    lr_raw_norm = np.linalg.norm(lr_raw)
+    if lr_raw_norm > 1e-12:
+        lr_raw = lr_raw / lr_raw_norm
+
+    def _score_split(cache_path: Path | None) -> tuple[list[float] | None, list[str] | None]:
+        if cache_path is None or not cache_path.exists():
+            return None, None
+        pl = torch.load(cache_path, map_location="cpu", weights_only=False)
+        X_sp = final_scaler.transform(pl[pooling].float().numpy()[:, best_layer, :])
+        scores = final_clf.predict_proba(X_sp)[:, 1].tolist()
+        return scores, list(pl["categories"])
+
+    benign_scores, _ = _score_split(benign_cache)
+    hn_scores, hn_cats = _score_split(hard_neg_cache)
+    ood_scores, ood_cats = _score_split(ood_deceptive_cache)
+
+    eval_results = evaluate_probe_scores(
+        benign_scores=benign_scores,
+        hard_neg_scores=hn_scores,
+        hard_neg_categories=hn_cats,
+        ood_deceptive_scores=ood_scores,
+        ood_deceptive_categories=ood_cats,
+        target_fpr=target_fpr,
+    )
+    summary.update(eval_results)
+
+    if save_probe is not None:
+        save_probe.parent.mkdir(parents=True, exist_ok=True)
+        calibrated_tau = eval_results.get("benign_eval", {}).get("threshold", 0.5)
+        checkpoint = {
+            "model_name": payload["model_name"],
+            "source_file": payload["source_file"],
+            "pooling": pooling,
+            "layer": int(best_layer),
+            "reg_c": float(reg_c),
+            "calibrated_threshold": float(calibrated_tau),
+            "scaler_mean": torch.tensor(final_scaler.mean_, dtype=torch.float32),
+            "scaler_scale": torch.tensor(final_scaler.scale_, dtype=torch.float32),
+            "lr_coef": torch.tensor(final_clf.coef_[0], dtype=torch.float32),
+            "lr_intercept": float(final_clf.intercept_[0]),
+            "lr_raw_unit_direction": torch.tensor(lr_raw, dtype=torch.float32),
+            "mass_mean_std_direction": torch.tensor(mm_std, dtype=torch.float32),
+            "mass_mean_raw_unit_direction": torch.tensor(mm_raw, dtype=torch.float32),
         }
-
-    if hard_neg_cache is not None and hard_neg_cache.exists():
-        hn_pl = torch.load(hard_neg_cache, map_location="cpu", weights_only=False)
-        X_hn = final_scaler.transform(hn_pl[pooling].float().numpy()[:, best_layer, :])
-        hn_scores = final_clf.predict_proba(X_hn)[:, 1].tolist()
-        hn_cats = list(hn_pl["categories"])
-
-        by_subtype: dict[str, list[float]] = defaultdict(list)
-        for cat, sc in zip(hn_cats, hn_scores):
-            by_subtype[cat].append(sc)
-
-        summary["hard_negative_eval"] = {
-            "threshold": round(threshold, 4),
-            "threshold_source": threshold_source,
-            "overall_false_positive_rate": round(positive_rate_at_threshold(hn_scores, threshold), 4),
-            "mean_score": round(float(np.mean(hn_scores)), 4),
-            "by_subtype": {
-                sub: {
-                    "n": len(scs),
-                    "fpr": round(positive_rate_at_threshold(scs, threshold), 4),
-                    "mean_score": round(float(np.mean(scs)), 4),
-                }
-                for sub, scs in sorted(by_subtype.items())
-            },
-        }
+        torch.save(checkpoint, save_probe)
+        summary["saved_probe_path"] = str(save_probe)
+        print(f"Saved best-layer probe & steering vectors to {save_probe}")
 
     output_json.parent.mkdir(parents=True, exist_ok=True)
     output_json.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
@@ -236,6 +239,8 @@ def main() -> None:
     parser.add_argument("--splits", type=int, default=5)
     parser.add_argument("--hard-neg-cache", type=Path, default=None)
     parser.add_argument("--benign-cache", type=Path, default=None)
+    parser.add_argument("--ood-deceptive-cache", type=Path, default=None)
+    parser.add_argument("--save-probe", type=Path, default=None)
     parser.add_argument("--target-fpr", type=float, default=0.01)
     args = parser.parse_args()
 
@@ -247,6 +252,8 @@ def main() -> None:
         n_splits=args.splits,
         hard_neg_cache=args.hard_neg_cache,
         benign_cache=args.benign_cache,
+        ood_deceptive_cache=args.ood_deceptive_cache,
+        save_probe=args.save_probe,
         target_fpr=args.target_fpr,
     )
 

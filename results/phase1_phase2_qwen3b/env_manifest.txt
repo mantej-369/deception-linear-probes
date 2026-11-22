@@ -1,0 +1,8 @@
+Python 3.13.16
+a561a99a9c8b6310181f0fe151324265f4d376fd
+accelerate==1.15.0
+numpy==2.4.6
+scikit-learn==1.6.1
+tokenizers==0.23.3
+torch==2.14.1+cu130
+transformers==5.22.1

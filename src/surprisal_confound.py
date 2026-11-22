@@ -295,6 +295,17 @@ def main() -> None:
     num_layers = int(v3_c["last_token_activations"].shape[1])
 
     tokenizer = AutoTokenizer.from_pretrained(args.model)
+    bad_worlds: set[str] = set()
+    for r in rows:
+        p_ids = tokenizer(" " + r["pos_cand"], add_special_tokens=False)["input_ids"]
+        n_ids = tokenizer(" " + r["neg_cand"], add_special_tokens=False)["input_ids"]
+        if len(p_ids) != 1 or len(n_ids) != 1:
+            bad_worlds.add(r["world_id"])
+    if bad_worlds:
+        print(f"Skipping {len(bad_worlds)} multi-token worlds for {args.model}: {sorted(bad_worlds)}")
+        rows = [r for r in rows if r["world_id"] not in bad_worlds]
+        dataset_path.write_text("\n".join(json.dumps(r, ensure_ascii=False) for r in rows) + "\n", encoding="utf-8")
+
     model = AutoModelForCausalLM.from_pretrained(args.model, dtype=torch.float16, device_map="auto")
     model.eval()
 
@@ -441,6 +452,7 @@ def main() -> None:
             "v4_cache_sha256": sha256_file(args.v4_cache),
             "n_rows": len(rows),
             "num_layers": num_layers,
+            "skipped_multi_token_worlds": sorted(bad_worlds),
         },
         "dataset_nuisance_audit": audit_surprisal_dataset(rows),
         "behavioral_compliance": {

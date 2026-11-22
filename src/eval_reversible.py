@@ -14,6 +14,7 @@ from typing import Any
 import numpy as np
 
 from src.evaluate import compute_roc_auc_pure
+from src.provenance import extract_top_k_tokens, resolve_model_commit
 
 POSITIONS = ("header", "prefix_end", "answer_tok", "suffix_end")
 DEFAULT_LAYERS = (22, 24, 25)
@@ -323,7 +324,9 @@ def main() -> None:
                     "world_truth": r["world_truth"],
                     "answer_choice": r["answer_choice"],
                     "answer_text": r["answer_text"],
+                    "answer_tids": ans_ids,
                     "answer_token_count": len(ans_ids),
+                    "top_tokens_at_prefix_end": extract_top_k_tokens(out.logits[0, pos["prefix_end"], :], tokenizer, k=5),
                     "is_true": r["is_true"],
                     "label": r["label"],
                     "positions": pos,
@@ -345,7 +348,7 @@ def main() -> None:
         "manifest": {
             "git_commit": git_revision(),
             "model": args.model,
-            "model_commit": getattr(model.config, "_commit_hash", "unknown"),
+            "model_commit": resolve_model_commit(args.model, model=model, tokenizer=tokenizer),
             "input_file": str(args.input),
             "input_sha256": sha256_file(args.input),
             "v3_cache_sha256": sha256_file(args.v3_cache),

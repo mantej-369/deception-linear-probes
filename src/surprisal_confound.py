@@ -1,4 +1,4 @@
-"""Phase 3: Balanced on-policy lying, pure benign-surprisal control, and 36-layer orthogonalisation fix."""
+"""Phase 3: Balanced on-policy lying, pure benign-surprisal control, and all-layer orthogonalisation fix."""
 
 from __future__ import annotations
 
@@ -18,6 +18,7 @@ from src.eval_reversible import (
     sha256_file,
 )
 from src.evaluate import compute_roc_auc_pure
+from src.provenance import extract_top_k_tokens, resolve_model_commit
 from src.reversible_worlds import REVERSIBLE_WORLDS
 
 
@@ -84,7 +85,7 @@ def build_surprisal_confound_rows() -> list[dict[str, Any]]:
                             "pos_cand": decoy,   # lie token (label=1)
                             "neg_cand": actual,  # truth token (label=0)
                             "is_true": is_true,
-                            "label": 1 - is_true,  # 1 = false/lie, 0 = true
+                            "label": 1 - is_true,
                             "system": sys_prompt,
                             "user": user_q,
                             "prefix": prefix,
@@ -129,10 +130,10 @@ def build_surprisal_confound_rows() -> list[dict[str, Any]]:
                         "answer_choice": ans_choice,
                         "answer_text": ans_text,
                         "alt_text": alt_text,
-                        "pos_cand": unexpected,  # unexpected/surprising token (label=1)
-                        "neg_cand": expected,    # expected token (label=0)
+                        "pos_cand": unexpected,
+                        "neg_cand": expected,
                         "is_true": is_expected,
-                        "label": 1 - is_expected,  # 1 = unexpected, 0 = expected
+                        "label": 1 - is_expected,
                         "system": sys_prompt,
                         "user": user_q,
                         "prefix": prefix,
@@ -165,6 +166,7 @@ def analyze_layer_orthogonalisation(
     w_dec: np.ndarray,
     scaler_mean: np.ndarray | None = None,
     scaler_scale: np.ndarray | None = None,
+    return_details: bool = False,
 ) -> dict[str, Any]:
     """Evaluate raw w_dec and surprisal-orthogonalised w_dec_perp_surp on one layer's answer_tok states."""
     def _prep(X: np.ndarray) -> np.ndarray:
@@ -186,7 +188,6 @@ def analyze_layer_orthogonalisation(
     w_perp_full = project_out_direction(w_dec_u, w_surp_full)
     cos_dec_surp = float(np.dot(w_dec_u, w_surp_full))
 
-    # 1. Benign-surprisal response: w_dec directly, and 5-fold world-grouped CV for w_perp
     ben_worlds = sorted({r["world_id"] for r in m_ben})
     world_to_fold = {w: i % 5 for i, w in enumerate(ben_worlds)}
     s_ben_dec = X_ben @ w_dec_u
@@ -197,6 +198,11 @@ def analyze_layer_orthogonalisation(
         ws_tr = _unit(X_ben[tr_mask & (y_ben == 1)].mean(axis=0) - X_ben[tr_mask & (y_ben == 0)].mean(axis=0))
         wp_tr = project_out_direction(w_dec_u, ws_tr)
         s_ben_perp_cv[va_mask] = X_ben[va_mask] @ wp_tr
+
+    s_hon_dec = X_hon @ w_dec_u
+    s_hon_perp = X_hon @ w_perp_full
+    s_lie_dec = X_lie @ w_dec_u
+    s_lie_perp = X_lie @ w_perp_full
 
     def _pair_diffs(rows_meta: list[dict[str, Any]], scores: np.ndarray) -> dict[str, tuple[str, str, float]]:
         grouped: dict[str, dict[int, float]] = defaultdict(dict)
@@ -209,6 +215,10 @@ def analyze_layer_orthogonalisation(
 
     ben_dec_pairs = _pair_diffs(m_ben, s_ben_dec)
     ben_perp_pairs = _pair_diffs(m_ben, s_ben_perp_cv)
+    lie_dec_pairs = _pair_diffs(m_lie, s_lie_dec)
+    lie_perp_pairs = _pair_diffs(m_lie, s_lie_perp)
+    hon_dec_pairs = _pair_diffs(m_hon, s_hon_dec)
+    hon_perp_pairs = _pair_diffs(m_hon, s_hon_perp)
 
     def _boot_subset(pair_map: dict[str, tuple[str, str, float]], pred=None) -> dict[str, Any]:
         wmap: dict[str, list[float]] = defaultdict(list)
@@ -221,12 +231,6 @@ def analyze_layer_orthogonalisation(
         res["n_pairs"] = n_pairs
         return res
 
-    # 2. Arm 1: cover_lie & cover_honest under w_dec and w_perp_full (disjoint from Arm 2!)
-    lie_dec_pairs = _pair_diffs(m_lie, X_lie @ w_dec_u)
-    lie_perp_pairs = _pair_diffs(m_lie, X_lie @ w_perp_full)
-    hon_dec_pairs = _pair_diffs(m_hon, X_hon @ w_dec_u)
-    hon_perp_pairs = _pair_diffs(m_hon, X_hon @ w_perp_full)
-
     def _is_verified_flip(pk: str, _w: str, _mo: str) -> bool:
         hon_pk = pk.replace("cover_lie_", "cover_honest_")
         return pair_log_odds.get(pk, -99.0) > 0.0 and pair_log_odds.get(hon_pk, 99.0) < 0.0
@@ -235,7 +239,7 @@ def analyze_layer_orthogonalisation(
         hon_pk = pk.replace("cover_lie_", "cover_honest_")
         return pair_log_odds.get(pk, -99.0) >= 2.0 and pair_log_odds.get(hon_pk, 99.0) < 0.0
 
-    return {
+    result: dict[str, Any] = {
         "cos_dec_surp": cos_dec_surp,
         "benign_surprisal": {
             "w_dec": _boot_subset(ben_dec_pairs),
@@ -270,6 +274,31 @@ def analyze_layer_orthogonalisation(
             "w_perp": _boot_subset(lie_perp_pairs, _is_confident_lie),
         },
     }
+
+    if return_details:
+        def _world_means(pair_map: dict[str, tuple[str, str, float]]) -> dict[str, float]:
+            wm: dict[str, list[float]] = defaultdict(list)
+            for _pk, (wid, _mo, diff) in pair_map.items():
+                wm[wid].append(diff)
+            return {wid: float(np.mean(vals)) for wid, vals in sorted(wm.items())}
+
+        result["_details"] = {
+            "w_perp_full": w_perp_full,
+            "item_scores": {
+                "benign_surprisal": {"w_dec": s_ben_dec.tolist(), "w_perp": s_ben_perp_cv.tolist()},
+                "cover_honest": {"w_dec": s_hon_dec.tolist(), "w_perp": s_hon_perp.tolist()},
+                "cover_lie": {"w_dec": s_lie_dec.tolist(), "w_perp": s_lie_perp.tolist()},
+            },
+            "world_means": {
+                "benign_dec": _world_means(ben_dec_pairs),
+                "benign_perp_cv": _world_means(ben_perp_pairs),
+                "hon_dec": _world_means(hon_dec_pairs),
+                "hon_perp": _world_means(hon_perp_pairs),
+                "lie_dec": _world_means(lie_dec_pairs),
+                "lie_perp": _world_means(lie_perp_pairs),
+            },
+        }
+    return result
 
 
 def main() -> None:
@@ -309,7 +338,6 @@ def main() -> None:
     model = AutoModelForCausalLM.from_pretrained(args.model, dtype=torch.float16, device_map="auto")
     model.eval()
 
-    # Single forward pass per row: extract all 36 layers at (prefix_end, answer_tok, suffix_end) + exact log-odds
     H_ans: dict[str, list[np.ndarray]] = defaultdict(list)
     H_pref: dict[str, list[np.ndarray]] = defaultdict(list)
     H_suf: dict[str, list[np.ndarray]] = defaultdict(list)
@@ -317,6 +345,7 @@ def main() -> None:
     pair_log_odds: dict[str, float] = {}
     pair_masses: dict[str, float] = {}
     per_pair_audit: dict[str, dict[str, Any]] = {}
+    item_meta_extra: dict[str, dict[str, Any]] = {}
 
     with torch.no_grad():
         for idx, r in enumerate(rows, 1):
@@ -331,11 +360,11 @@ def main() -> None:
             inp = torch.tensor([full_ids], dtype=torch.long, device=model.device)
             out = model(inp, output_hidden_states=True, use_cache=False)
 
-            # Next-token distribution right before answer_tok
             logits_dec = out.logits[0, pos["prefix_end"], :].float()
             lp = torch.log_softmax(logits_dec, dim=-1)
             lo = float((lp[pos_ids[0]] - lp[neg_ids[0]]).item())
             pm = float((torch.exp(lp[pos_ids[0]]) + torch.exp(lp[neg_ids[0]])).item())
+            top_toks = extract_top_k_tokens(logits_dec, tokenizer, k=5)
 
             pk = r["pair_key"]
             if pk in pair_log_odds:
@@ -348,12 +377,27 @@ def main() -> None:
                     "pair_key": pk,
                     "arm": r["arm"],
                     "world_id": r["world_id"],
+                    "family": r["family"],
                     "mention_order": r["mention_order"],
+                    "pos_cand": r["pos_cand"],
+                    "neg_cand": r["neg_cand"],
+                    "pos_tid": int(pos_ids[0]),
+                    "neg_tid": int(neg_ids[0]),
                     "log_odds": lo,
                     "pair_mass": pm,
+                    "top_tokens": top_toks,
                 }
 
-            # Stack hidden states across all 36 layers for the 3 aligned positions
+            item_meta_extra[r["id"]] = {
+                "ans_tid": int(ans_ids[0]),
+                "pos_tid": int(pos_ids[0]),
+                "neg_tid": int(neg_ids[0]),
+                "positions": pos,
+                "pair_log_odds": lo,
+                "pair_mass": pm,
+                "top_tokens": top_toks,
+            }
+
             hs_ans = np.stack([out.hidden_states[L + 1][0, pos["answer_tok"], :].float().cpu().numpy() for L in range(num_layers)], axis=0)
             hs_pref = np.stack([out.hidden_states[L + 1][0, pos["prefix_end"], :].float().cpu().numpy() for L in range(num_layers)], axis=0)
             hs_suf = np.stack([out.hidden_states[L + 1][0, pos["suffix_end"], :].float().cpu().numpy() for L in range(num_layers)], axis=0)
@@ -366,11 +410,9 @@ def main() -> None:
             if idx % 120 == 0 or idx == len(rows):
                 print(f"Processed {idx}/{len(rows)} rows")
 
-    H_ans_arr = {k: np.stack(v, axis=0) for k, v in H_ans.items()}  # (N, L, D)
+    H_ans_arr = {k: np.stack(v, axis=0) for k, v in H_ans.items()}
     H_pref_arr = {k: np.stack(v, axis=0) for k, v in H_pref.items()}
-    H_suf_arr = {k: np.stack(v, axis=0) for k, v in H_suf.items()}
 
-    # Behavioral compliance summary
     def _beh_stats(arm: str) -> dict[str, Any]:
         pks = [pk for pk, v in per_pair_audit.items() if v["arm"] == arm]
         los = np.array([pair_log_odds[pk] for pk in pks])
@@ -387,7 +429,6 @@ def main() -> None:
             "n_pos_alternative_first": int(sum(pair_log_odds[pk] > 0 for pk in af)),
         }
 
-    # Verified flips count (honest < 0 AND lie > 0)
     lie_pks = [pk for pk, v in per_pair_audit.items() if v["arm"] == "cover_lie"]
     flips_cf = sum(
         pair_log_odds[pk] > 0 and pair_log_odds[pk.replace("cover_lie_", "cover_honest_")] < 0
@@ -400,10 +441,33 @@ def main() -> None:
         if per_pair_audit[pk]["mention_order"] == "alternative_first"
     )
 
-    # 36-layer analysis (answer_tok for both raw and std coordinates, plus prefix_end directive offset)
     layers_raw: dict[str, Any] = {}
     layers_std: dict[str, Any] = {}
     prefix_offset_raw: dict[str, Any] = {}
+    per_world_records: list[dict[str, Any]] = []
+    item_score_store: dict[str, dict[str, Any]] = {}
+    for arm, mlist in meta_arm.items():
+        for r in mlist:
+            item_score_store[r["id"]] = {
+                "id": r["id"],
+                "arm": arm,
+                "pair_key": r["pair_key"],
+                "world_id": r["world_id"],
+                "family": r["family"],
+                "mention_order": r["mention_order"],
+                "world_truth": r["world_truth"],
+                "answer_choice": r["answer_choice"],
+                "answer_text": r["answer_text"],
+                "label": r["label"],
+                **item_meta_extra[r["id"]],
+                "scores_ans_raw_dec": {},
+                "scores_ans_raw_perp": {},
+                "scores_ans_std_dec": {},
+                "scores_ans_std_perp": {},
+                "scores_pref_raw_dec": {},
+            }
+
+    world_meta_map = {r["world_id"]: (r["family"], r["mention_order"]) for r in rows}
 
     for L in range(num_layers):
         X3 = v3_c["last_token_activations"][:, L, :].float().numpy()
@@ -411,19 +475,19 @@ def main() -> None:
         d = compute_2x2_directions(X3, y3, X4, y4)
 
         H_L = {k: v[:, L, :] for k, v in H_ans_arr.items()}
-        layers_raw[str(L)] = analyze_layer_orthogonalisation(H_L, meta_arm, pair_log_odds, d["w_dec_raw_unit"])
-        layers_std[str(L)] = analyze_layer_orthogonalisation(
-            H_L, meta_arm, pair_log_odds, d["w_dec_std_unit"], d["scaler_mean"], d["scaler_scale"]
+        res_raw = analyze_layer_orthogonalisation(H_L, meta_arm, pair_log_odds, d["w_dec_raw_unit"], return_details=True)
+        res_std = analyze_layer_orthogonalisation(
+            H_L, meta_arm, pair_log_odds, d["w_dec_std_unit"], d["scaler_mean"], d["scaler_scale"], return_details=True
         )
+        det_raw = res_raw.pop("_details")
+        det_std = res_std.pop("_details")
+        layers_raw[str(L)] = res_raw
+        layers_std[str(L)] = res_std
 
-        # Check pre-answer directive offset (cover_lie - cover_honest at prefix_end) before and after orthogonalisation
-        X_ben_L = H_ans_arr["benign_surprisal"][:, L, :]
-        y_ben = np.array([int(r["label"]) for r in meta_arm["benign_surprisal"]])
-        w_surp_L = _unit(X_ben_L[y_ben == 1].mean(axis=0) - X_ben_L[y_ben == 0].mean(axis=0))
-        w_perp_L = project_out_direction(d["w_dec_raw_unit"], w_surp_L)
-
+        w_perp_L = det_raw["w_perp_full"]
         p_lie_dec = H_pref_arr["cover_lie"][:, L, :] @ d["w_dec_raw_unit"]
         p_hon_dec = H_pref_arr["cover_honest"][:, L, :] @ d["w_dec_raw_unit"]
+        p_ben_dec = H_pref_arr["benign_surprisal"][:, L, :] @ d["w_dec_raw_unit"]
         p_lie_perp = H_pref_arr["cover_lie"][:, L, :] @ w_perp_L
         p_hon_perp = H_pref_arr["cover_honest"][:, L, :] @ w_perp_L
 
@@ -438,16 +502,57 @@ def main() -> None:
             "mean_shift_w_perp": float(p_lie_perp.mean() - p_hon_perp.mean()),
         }
 
-    # Save per-pair behavioral log
+        # Populate per-world full-precision records
+        for wid in sorted(world_meta_map):
+            fam, mo = world_meta_map[wid]
+            per_world_records.append(
+                {
+                    "layer": L,
+                    "world_id": wid,
+                    "family": fam,
+                    "mention_order": mo,
+                    "raw_benign_dec": det_raw["world_means"]["benign_dec"].get(wid),
+                    "raw_benign_perp_cv": det_raw["world_means"]["benign_perp_cv"].get(wid),
+                    "raw_hon_dec": det_raw["world_means"]["hon_dec"].get(wid),
+                    "raw_hon_perp": det_raw["world_means"]["hon_perp"].get(wid),
+                    "raw_lie_dec": det_raw["world_means"]["lie_dec"].get(wid),
+                    "raw_lie_perp": det_raw["world_means"]["lie_perp"].get(wid),
+                    "std_benign_dec": det_std["world_means"]["benign_dec"].get(wid),
+                    "std_benign_perp_cv": det_std["world_means"]["benign_perp_cv"].get(wid),
+                    "std_hon_dec": det_std["world_means"]["hon_dec"].get(wid),
+                    "std_hon_perp": det_std["world_means"]["hon_perp"].get(wid),
+                    "std_lie_dec": det_std["world_means"]["lie_dec"].get(wid),
+                    "std_lie_perp": det_std["world_means"]["lie_perp"].get(wid),
+                }
+            )
+
+        # Populate per-item full-precision scores across all layers
+        pref_map = {"cover_lie": p_lie_dec, "cover_honest": p_hon_dec, "benign_surprisal": p_ben_dec}
+        lk = str(L)
+        for arm, mlist in meta_arm.items():
+            for i_row, r in enumerate(mlist):
+                rec = item_score_store[r["id"]]
+                rec["scores_ans_raw_dec"][lk] = float(det_raw["item_scores"][arm]["w_dec"][i_row])
+                rec["scores_ans_raw_perp"][lk] = float(det_raw["item_scores"][arm]["w_perp"][i_row])
+                rec["scores_ans_std_dec"][lk] = float(det_std["item_scores"][arm]["w_dec"][i_row])
+                rec["scores_ans_std_perp"][lk] = float(det_std["item_scores"][arm]["w_perp"][i_row])
+                rec["scores_pref_raw_dec"][lk] = float(pref_map[arm][i_row])
+
     (args.out_dir / "pair_behavior.jsonl").write_text(
         "\n".join(json.dumps(v) for v in per_pair_audit.values()) + "\n", encoding="utf-8"
+    )
+    (args.out_dir / "per_world_scores.jsonl").write_text(
+        "\n".join(json.dumps(v) for v in per_world_records) + "\n", encoding="utf-8"
+    )
+    (args.out_dir / "per_item_scores.jsonl").write_text(
+        "\n".join(json.dumps(item_score_store[r["id"]]) for r in rows) + "\n", encoding="utf-8"
     )
 
     summary = {
         "manifest": {
             "git_commit": git_revision(),
             "model": args.model,
-            "model_commit": getattr(model.config, "_commit_hash", "unknown"),
+            "model_commit": resolve_model_commit(args.model, model=model, tokenizer=tokenizer),
             "v3_cache_sha256": sha256_file(args.v3_cache),
             "v4_cache_sha256": sha256_file(args.v4_cache),
             "n_rows": len(rows),
@@ -472,7 +577,7 @@ def main() -> None:
 
     out_path = args.out_dir / "summary.json"
     out_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
-    print(f"Saved {out_path}")
+    print(f"Saved {out_path}, pair_behavior.jsonl, per_world_scores.jsonl, and per_item_scores.jsonl")
 
 
 if __name__ == "__main__":

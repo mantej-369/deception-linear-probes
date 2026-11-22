@@ -11,6 +11,7 @@ from typing import Any
 import numpy as np
 
 from src.eval_reversible import git_revision, paired_world_bootstrap, sha256_file
+from src.provenance import extract_top_k_tokens, resolve_model_commit, select_noop_check_indices
 from src.reversible_worlds import REVERSIBLE_WORLDS
 
 
@@ -53,7 +54,6 @@ def build_benign_rule_items(n_worlds: int = 20) -> list[dict[str, Any]]:
     """Counterbalanced benign format/selection controls using clean single-token world values."""
     items: list[dict[str, Any]] = []
     for wid, family, _role, _subj, val_a, val_b in REVERSIBLE_WORLDS[:n_worlds]:
-        # Rule 1: Output first option; Rule 2: Output second option (every word is both comply and defy)
         for rule_id, target, other in [("first", val_a, val_b), ("second", val_b, val_a)]:
             items.append(
                 {
@@ -85,7 +85,6 @@ def build_reversible_steering_items(rows: list[dict[str, Any]]) -> list[dict[str
         if key in seen:
             continue
         seen.add(key)
-        # Positive candidate = lie (false value), Negative candidate = truth (true value)
         truth_val = r["answer_text"] if r["is_true"] == 1 else r["alt_text"]
         lie_val = r["alt_text"] if r["is_true"] == 1 else r["answer_text"]
         items.append(
@@ -109,8 +108,10 @@ def compute_next_token_metrics(
     base_log_probs_1d: Any,
     pos_tid: int,
     neg_tid: int,
-) -> dict[str, float]:
-    """Compute log-odds, unconditional probabilities, pair mass, entropy, and full-vocab KL."""
+    tokenizer: Any | None = None,
+    top_k: int = 5,
+) -> dict[str, Any]:
+    """Compute log-odds, unconditional probabilities, pair mass, entropy, full-vocab KL, and top-k tokens."""
     import torch
 
     lp = torch.log_softmax(logits_1d.float(), dim=-1)
@@ -128,7 +129,9 @@ def compute_next_token_metrics(
     kl = float((base_p * (base_log_probs_1d.float() - lp)).sum().item())
     top_tid = int(torch.argmax(logits_1d).item())
 
-    return {
+    out: dict[str, Any] = {
+        "pos_tid": int(pos_tid),
+        "neg_tid": int(neg_tid),
         "log_odds": log_odds,
         "cond_prob": cond_prob,
         "p_pos": p_pos,
@@ -138,6 +141,9 @@ def compute_next_token_metrics(
         "kl_vs_base": max(0.0, kl),
         "top_tid": top_tid,
     }
+    if tokenizer is not None:
+        out["top_tokens"] = extract_top_k_tokens(logits_1d, tokenizer, k=top_k)
+    return out
 
 
 def summarize_steering_records(
@@ -210,10 +216,10 @@ def main() -> None:
     ckpt = torch.load(args.directions, map_location="cpu", weights_only=False)
     d = ckpt["directions"][args.layer]
 
-    # Single shared natural step norm across all axes (dec, cmp, and 3 orthogonal random controls)
     step_norm = float(d["w_dec_raw_step_norm"])
     w_dec = np.asarray(d["w_dec_raw_unit"], dtype=np.float32)
     w_cmp = np.asarray(d["w_cmp_raw_unit"], dtype=np.float32)
+    cos_dec_cmp_raw = float(np.dot(w_dec.astype(np.float64), w_cmp.astype(np.float64)))
     rnd_vecs = make_orthogonal_random_controls([w_dec, w_cmp], n_controls=3, seed=42)
     axes: dict[str, np.ndarray] = {
         "dec": w_dec,
@@ -230,7 +236,6 @@ def main() -> None:
     model = AutoModelForCausalLM.from_pretrained(args.model, dtype=torch.float16, device_map="auto")
     model.eval()
 
-    # Pre-tokenize and verify strict single-token candidate boundaries
     prepared = []
     skipped_multi = []
     for it in items:
@@ -241,7 +246,6 @@ def main() -> None:
         pos_ids = tokenizer(" " + it["pos_cand"], add_special_tokens=False)["input_ids"]
         neg_ids = tokenizer(" " + it["neg_cand"], add_special_tokens=False)["input_ids"]
 
-        # Verify concatenating candidate does not merge across prefix boundary
         full_pos = tokenizer(full_prefix + " " + it["pos_cand"], add_special_tokens=False)["input_ids"]
         full_neg = tokenizer(full_prefix + " " + it["neg_cand"], add_special_tokens=False)["input_ids"]
         if len(pos_ids) != 1 or len(neg_ids) != 1 or full_pos != inp_ids + pos_ids or full_neg != inp_ids + neg_ids:
@@ -252,25 +256,35 @@ def main() -> None:
     if skipped_multi:
         print(f"Warning: skipped {len(skipped_multi)} multi-token/boundary items: {skipped_multi[:5]}")
 
-    # Mandatory no-op hook identity check on first item
-    test_inp = torch.tensor([prepared[0][1]], dtype=torch.long, device=model.device)
+    # Multi-suite no-op hook identity verification (explicitly reports checked_n vs evaluated_n)
+    chk_indices = select_noop_check_indices([x[0] for x in prepared], suite_key="suite", max_per_suite=2)
+    chk_ids = [prepared[i][0]["id"] for i in chk_indices]
+    noop_max_diff = 0.0
     with torch.no_grad():
-        base_logits_chk = model(test_inp, use_cache=False).logits[0, -1, :].float()
+        for ci in chk_indices:
+            test_inp = torch.tensor([prepared[ci][1]], dtype=torch.long, device=model.device)
+            base_logits_chk = model(test_inp, use_cache=False).logits[0, -1, :].float()
 
-        def _noop_hook(_m, _i, output):
-            return output
+            def _noop_hook(_m, _i, output):
+                return output
 
-        h_chk = model.model.layers[args.layer].register_forward_hook(_noop_hook)
-        try:
-            noop_logits_chk = model(test_inp, use_cache=False).logits[0, -1, :].float()
-        finally:
-            h_chk.remove()
-    noop_max_diff = float((base_logits_chk - noop_logits_chk).abs().max().item())
+            h_chk = model.model.layers[args.layer].register_forward_hook(_noop_hook)
+            try:
+                noop_logits_chk = model(test_inp, use_cache=False).logits[0, -1, :].float()
+            finally:
+                h_chk.remove()
+            diff_i = float((base_logits_chk - noop_logits_chk).abs().max().item())
+            noop_max_diff = max(noop_max_diff, diff_i)
+
     if noop_max_diff > 1e-5:
         raise AssertionError(f"No-op hook changed logits by {noop_max_diff}")
-    print(f"No-op hook identity check passed (max_diff={noop_max_diff:.2e}) on {len(prepared)} single-token items")
+    n_suites_chk = len({prepared[i][0]["suite"] for i in chk_indices})
+    print(
+        f"No-op hook identity check passed (max_diff={noop_max_diff:.2e}) on "
+        f"checked_n={len(chk_indices)} items across {n_suites_chk} suites "
+        f"(out of evaluated_n={len(prepared)} single-token items)"
+    )
 
-    # Run baseline once per item, then sweep signed alphas across all axes
     records: list[dict[str, Any]] = []
     nonzero_alphas = [a for a in args.alphas if a != 0.0]
 
@@ -281,7 +295,7 @@ def main() -> None:
             base_logits = base_out.logits[0, -1, :].float()
             base_lp = torch.log_softmax(base_logits, dim=-1)
             dec_h_norm = float(base_out.hidden_states[args.layer + 1][0, -1, :].float().norm().item())
-            base_m = compute_next_token_metrics(base_logits, base_lp, pos_tid, neg_tid)
+            base_m = compute_next_token_metrics(base_logits, base_lp, pos_tid, neg_tid, tokenizer=tokenizer, top_k=5)
 
             for axis_name in axes:
                 records.append(
@@ -321,7 +335,9 @@ def main() -> None:
                         if handle is not None:
                             handle.remove()
 
-                    m = compute_next_token_metrics(out.logits[0, -1, :], base_lp, pos_tid, neg_tid)
+                    m = compute_next_token_metrics(
+                        out.logits[0, -1, :], base_lp, pos_tid, neg_tid, tokenizer=tokenizer, top_k=5
+                    )
                     records.append(
                         {
                             "id": it["id"],
@@ -347,14 +363,17 @@ def main() -> None:
         "manifest": {
             "git_commit": git_revision(),
             "model": args.model,
-            "model_commit": getattr(model.config, "_commit_hash", "unknown"),
+            "model_commit": resolve_model_commit(args.model, model=model, tokenizer=tokenizer),
             "directions_sha256": sha256_file(args.directions),
             "layer": args.layer,
             "scope": args.scope,
             "step_norm": step_norm,
+            "cos_dec_cmp_raw": cos_dec_cmp_raw,
             "alphas": args.alphas,
             "n_items_evaluated": len(prepared),
             "n_items_skipped": len(skipped_multi),
+            "noop_checked_n": len(chk_indices),
+            "noop_checked_ids": chk_ids,
             "noop_max_diff": noop_max_diff,
         },
         "suites": summarize_steering_records(records, args.alphas),

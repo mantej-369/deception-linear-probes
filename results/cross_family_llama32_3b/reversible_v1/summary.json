@@ -1,0 +1,5234 @@
+{
+  "manifest": {
+    "git_commit": "12861bfbe1c313d07e0854e272abe01b63dffafc",
+    "model": "unsloth/Llama-3.2-3B-Instruct",
+    "model_commit": "unknown",
+    "input_file": "data/processed/reversible_worlds_v1.jsonl",
+    "input_sha256": "f68c1546914e4c5d",
+    "v3_cache_sha256": "45b17434e6c172b7",
+    "v4_cache_sha256": "57257c2aeca6e1fd",
+    "n_rows": 1192,
+    "multi_token_answers": {}
+  },
+  "tfidf_null_arm_a": {
+    "system_only": 0.5,
+    "assistant_only": 0.5,
+    "system_plus_assistant": 0.5
+  },
+  "direction_geometry": {
+    "L17": {
+      "w_dec_raw_step_norm": 0.8299717307090759,
+      "w_cmp_raw_step_norm": 0.5209547877311707,
+      "cos_d3_d4_raw": 0.48481929302215576,
+      "cos_dec_cmp_raw": -0.49149903655052185,
+      "cos_dec_cmp_std": -0.4676019212299942
+    },
+    "L18": {
+      "w_dec_raw_step_norm": 0.8868175148963928,
+      "w_cmp_raw_step_norm": 0.556013286113739,
+      "cos_d3_d4_raw": 0.4834509491920471,
+      "cos_dec_cmp_raw": -0.4816768765449524,
+      "cos_dec_cmp_std": -0.451144367179464
+    },
+    "L19": {
+      "w_dec_raw_step_norm": 1.0359727144241333,
+      "w_cmp_raw_step_norm": 0.6477862596511841,
+      "cos_d3_d4_raw": 0.4876944422721863,
+      "cos_dec_cmp_raw": -0.48997941613197327,
+      "cos_dec_cmp_std": -0.43122514070368
+    },
+    "L20": {
+      "w_dec_raw_step_norm": 1.1231544017791748,
+      "w_cmp_raw_step_norm": 0.7276210784912109,
+      "cos_d3_d4_raw": 0.4577583074569702,
+      "cos_dec_cmp_raw": -0.4932430386543274,
+      "cos_dec_cmp_std": -0.44192171063565844
+    }
+  },
+  "readouts": {
+    "L17_dec_std": {
+      "arm_a_truth_reversal": {
+        "header": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "prefix_end": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "answer_tok": {
+          "pooled_auroc_false_vs_true": 0.6717,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.8667480645701289,
+            "sd": 0.6075902474434853,
+            "ci95": [
+              0.6833899560881157,
+              1.0520799503677212
+            ],
+            "pos_worlds": 35,
+            "sign_p": 1.382612026645802e-06
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.3357348211109638,
+              "sd": 0.611931215369103,
+              "ci95": [
+                0.14623412541113792,
+                0.5135352496150879
+              ],
+              "pos_worlds": 31,
+              "sign_p": 0.0006795482549932785
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 1.3695986280217767,
+              "sd": 0.769736947191763,
+              "ci95": [
+                1.1386255226703361,
+                1.6005199055606496
+              ],
+              "pos_worlds": 37,
+              "sign_p": 1.946500560734421e-08
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.8949107445776463,
+              "sd": 0.6962346387295766,
+              "ci95": [
+                0.6910532388836146,
+                1.1108013264555483
+              ],
+              "pos_worlds": 32,
+              "sign_p": 0.0001821658297558315
+            }
+          }
+        },
+        "suffix_end": {
+          "pooled_auroc_false_vs_true": 0.5003,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.00665299259126185,
+            "sd": 0.3621532997579577,
+            "ci95": [
+              -0.10039753951054686,
+              0.11459367083152747
+            ],
+            "pos_worlds": 17,
+            "sign_p": 0.42959050784338615
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.08520234674215317,
+              "sd": 0.5733477656490111,
+              "ci95": [
+                -0.09690512614324688,
+                0.25953159911558027
+              ],
+              "pos_worlds": 22,
+              "sign_p": 0.6358280026288412
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": -0.02722363397479057,
+              "sd": 0.26218518650344375,
+              "ci95": [
+                -0.10341784322168678,
+                0.054365447866730365
+              ],
+              "pos_worlds": 19,
+              "sign_p": 0.8746293123804207
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": -0.038019734993577005,
+              "sd": 0.4338032200382152,
+              "ci95": [
+                -0.16213461698032916,
+                0.10003870467189685
+              ],
+              "pos_worlds": 19,
+              "sign_p": 0.8746293123804207
+            }
+          }
+        }
+      },
+      "arm_b_benign": {
+        "header": {
+          "benign_copy": {
+            "n": 80,
+            "mean": -0.614562975987792,
+            "auroc_distort_false_vs_cond": 0.7905
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -4.7921917051076885,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -2.7864551067352297,
+            "auroc_distort_false_vs_cond": 0.9988
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -2.6517204463481905,
+            "auroc_distort_false_vs_cond": 0.9988
+          }
+        },
+        "prefix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 2.1648329719901085,
+            "auroc_distort_false_vs_cond": 0.3123
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -2.8034582026302814,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -1.3913284689188004,
+            "auroc_distort_false_vs_cond": 0.9934
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 1.013536997884512,
+            "auroc_distort_false_vs_cond": 0.682
+          }
+        },
+        "answer_tok": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 0.9320686722174287,
+            "auroc_distort_false_vs_cond": 0.8684
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -2.8004557199776174,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -1.067963744699955,
+            "auroc_distort_false_vs_cond": 0.9991
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -0.7769996365532279,
+            "auroc_distort_false_vs_cond": 0.9973
+          }
+        },
+        "suffix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 0.8338318448513746,
+            "auroc_distort_false_vs_cond": 0.9455
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": 1.0705601782537997,
+            "auroc_distort_false_vs_cond": 0.913
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -0.39920277558267114,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 1.9053780056536198,
+            "auroc_distort_false_vs_cond": 0.7686
+          }
+        }
+      },
+      "arm_c_parametric": {
+        "header": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "prefix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "answer_tok": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": -0.524877085040013,
+            "sd": 0.8712352860549927,
+            "ci95": [
+              -0.8630315152824751,
+              -0.17190345287219577
+            ],
+            "pos_worlds": 7,
+            "sign_p": 0.06391465663909912
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 2.3155354822261462,
+            "sd": 1.0726771571500413,
+            "ci95": [
+              1.8882636527634329,
+              2.7517740576476273
+            ],
+            "pos_worlds": 24,
+            "sign_p": 1.1920928955078125e-07
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 1.5142352812820012,
+            "sd": 0.7511896070695592,
+            "ci95": [
+              1.2107063401800893,
+              1.8077717858366666
+            ],
+            "pos_worlds": 24,
+            "sign_p": 1.1920928955078125e-07
+          }
+        },
+        "suffix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": -0.7803286508553557,
+            "sd": 0.8114089415795765,
+            "ci95": [
+              -1.088173735514283,
+              -0.47479593859364594
+            ],
+            "pos_worlds": 4,
+            "sign_p": 0.001543879508972168
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.1682434750513898,
+            "sd": 0.41594496961532573,
+            "ci95": [
+              0.008975225009231083,
+              0.34193895010070663
+            ],
+            "pos_worlds": 15,
+            "sign_p": 0.30745625495910645
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": -0.6151097803894016,
+            "sd": 0.7449059752634523,
+            "ci95": [
+              -0.9188428226134016,
+              -0.30799216518385547
+            ],
+            "pos_worlds": 5,
+            "sign_p": 0.006610751152038574
+          }
+        }
+      }
+    },
+    "L17_dec_raw": {
+      "arm_a_truth_reversal": {
+        "header": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "prefix_end": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "answer_tok": {
+          "pooled_auroc_false_vs_true": 0.6548,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.22856019074097275,
+            "sd": 0.1493792637561335,
+            "ci95": [
+              0.18270139428476487,
+              0.2737126267321097
+            ],
+            "pos_worlds": 37,
+            "sign_p": 1.946500560734421e-08
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.05613042395561933,
+              "sd": 0.16263745434140772,
+              "ci95": [
+                0.005845364737324417,
+                0.10443363620899612
+              ],
+              "pos_worlds": 28,
+              "sign_p": 0.01658900337497471
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.37934453012421726,
+              "sd": 0.19293966379886474,
+              "ci95": [
+                0.32045306106796484,
+                0.4373502722010016
+              ],
+              "pos_worlds": 37,
+              "sign_p": 1.946500560734421e-08
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.2502056181430817,
+              "sd": 0.1758940583563452,
+              "ci95": [
+                0.1972794253518805,
+                0.30549880979582666
+              ],
+              "pos_worlds": 36,
+              "sign_p": 1.8570244719740003e-07
+            }
+          }
+        },
+        "suffix_end": {
+          "pooled_auroc_false_vs_true": 0.491,
+          "overall": {
+            "n_worlds": 40,
+            "mean": -0.01575300687303146,
+            "sd": 0.06321020448533883,
+            "ci95": [
+              -0.034613356496362636,
+              0.0033154801093041846
+            ],
+            "pos_worlds": 15,
+            "sign_p": 0.1538599441628321
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": -0.021735338680446147,
+              "sd": 0.12116273582389499,
+              "ci95": [
+                -0.0608656246913597,
+                0.015715334401465924
+              ],
+              "pos_worlds": 18,
+              "sign_p": 0.6358280026288412
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.012669789046049118,
+              "sd": 0.04163321136931035,
+              "ci95": [
+                6.240822374820713e-05,
+                0.0253588651306927
+              ],
+              "pos_worlds": 24,
+              "sign_p": 0.26818725105476915
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": -0.038193470984697345,
+              "sd": 0.08301534417982905,
+              "ci95": [
+                -0.06191243339329958,
+                -0.0114070687443018
+              ],
+              "pos_worlds": 13,
+              "sign_p": 0.03847730828420026
+            }
+          }
+        }
+      },
+      "arm_b_benign": {
+        "header": {
+          "benign_copy": {
+            "n": 80,
+            "mean": -1.2142515197396277,
+            "auroc_distort_false_vs_cond": 0.8586
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -2.3248492240905763,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -1.7959523618221283,
+            "auroc_distort_false_vs_cond": 0.9994
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -1.8477837890386581,
+            "auroc_distort_false_vs_cond": 1.0
+          }
+        },
+        "prefix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": -0.5104478981345892,
+            "auroc_distort_false_vs_cond": 0.3111
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -1.6813720390200615,
+            "auroc_distort_false_vs_cond": 0.9992
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -1.4081318259239197,
+            "auroc_distort_false_vs_cond": 0.9853
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -0.7888977363705635,
+            "auroc_distort_false_vs_cond": 0.6327
+          }
+        },
+        "answer_tok": {
+          "benign_copy": {
+            "n": 80,
+            "mean": -0.5127804265357554,
+            "auroc_distort_false_vs_cond": 0.9383
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -1.295353678613901,
+            "auroc_distort_false_vs_cond": 0.9997
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -1.200598268210888,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -1.0849729195237159,
+            "auroc_distort_false_vs_cond": 0.9997
+          }
+        },
+        "suffix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": -1.0227800637483597,
+            "auroc_distort_false_vs_cond": 0.9919
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -0.9269558146595955,
+            "auroc_distort_false_vs_cond": 0.9734
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -1.2389623939990997,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -0.7440047930926085,
+            "auroc_distort_false_vs_cond": 0.9009
+          }
+        }
+      },
+      "arm_c_parametric": {
+        "header": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "prefix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "answer_tok": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": -0.19000364633070096,
+            "sd": 0.22114856270403252,
+            "ci95": [
+              -0.2792521611709769,
+              -0.10590222624337549
+            ],
+            "pos_worlds": 3,
+            "sign_p": 0.0002771615982055664
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.580563985535668,
+            "sd": 0.2746348207559713,
+            "ci95": [
+              0.4667573163234112,
+              0.688505787950837
+            ],
+            "pos_worlds": 23,
+            "sign_p": 2.9802322387695312e-06
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.3441774155944586,
+            "sd": 0.23109766440815968,
+            "ci95": [
+              0.2528102156214623,
+              0.43266446132264613
+            ],
+            "pos_worlds": 23,
+            "sign_p": 2.9802322387695312e-06
+          }
+        },
+        "suffix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": -0.14798474270436499,
+            "sd": 0.15843919674838028,
+            "ci95": [
+              -0.20826351520243203,
+              -0.08942083865404145
+            ],
+            "pos_worlds": 5,
+            "sign_p": 0.006610751152038574
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.12342438153508638,
+            "sd": 0.11591238489415315,
+            "ci95": [
+              0.07827364292073374,
+              0.17102542174980043
+            ],
+            "pos_worlds": 21,
+            "sign_p": 0.0002771615982055664
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": -0.082873093481693,
+            "sd": 0.14069104462093168,
+            "ci95": [
+              -0.1389307325072069,
+              -0.0243338751813604
+            ],
+            "pos_worlds": 8,
+            "sign_p": 0.15158963203430176
+          }
+        }
+      }
+    },
+    "L17_cmp_raw": {
+      "arm_a_truth_reversal": {
+        "header": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "prefix_end": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "answer_tok": {
+          "pooled_auroc_false_vs_true": 0.6016,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.09811973671118418,
+            "sd": 0.10652741148375382,
+            "ci95": [
+              0.06510169977943103,
+              0.129768852169315
+            ],
+            "pos_worlds": 30,
+            "sign_p": 0.0022214337732293643
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.05902225524187088,
+              "sd": 0.12362908524869477,
+              "ci95": [
+                0.022030912339687347,
+                0.09408312950283287
+              ],
+              "pos_worlds": 26,
+              "sign_p": 0.0806904677519924
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.1246490404009819,
+              "sd": 0.11585489279767122,
+              "ci95": [
+                0.08808305609971284,
+                0.1593340855464339
+              ],
+              "pos_worlds": 35,
+              "sign_p": 1.382612026645802e-06
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.11068791449069977,
+              "sd": 0.10643868624693507,
+              "ci95": [
+                0.0775851958617568,
+                0.1422513807937503
+              ],
+              "pos_worlds": 35,
+              "sign_p": 1.382612026645802e-06
+            }
+          }
+        },
+        "suffix_end": {
+          "pooled_auroc_false_vs_true": 0.4989,
+          "overall": {
+            "n_worlds": 40,
+            "mean": -0.010291707515716552,
+            "sd": 0.0760235517656005,
+            "ci95": [
+              -0.032834405029813454,
+              0.012307994179427599
+            ],
+            "pos_worlds": 20,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": -0.10117481797933578,
+              "sd": 0.14242005671944535,
+              "ci95": [
+                -0.14349028646945955,
+                -0.05968399804085494
+              ],
+              "pos_worlds": 9,
+              "sign_p": 0.0006795482549932785
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.07841676920652389,
+              "sd": 0.06302210914975515,
+              "ci95": [
+                0.05801755007356405,
+                0.09759390346705911
+              ],
+              "pos_worlds": 37,
+              "sign_p": 1.946500560734421e-08
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": -0.008117073774337768,
+              "sd": 0.07454767217510894,
+              "ci95": [
+                -0.03160791397094726,
+                0.014503928348422046
+              ],
+              "pos_worlds": 19,
+              "sign_p": 0.8746293123804207
+            }
+          }
+        }
+      },
+      "arm_b_benign": {
+        "header": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 1.720944768190384,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": 2.462688136100769,
+            "auroc_distort_false_vs_cond": 0.5725
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": 2.3613482654094695,
+            "auroc_distort_false_vs_cond": 0.6972
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 1.734138584136963,
+            "auroc_distort_false_vs_cond": 0.9992
+          }
+        },
+        "prefix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 1.1622779577970506,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": 2.19131425768137,
+            "auroc_distort_false_vs_cond": 0.5622
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": 1.6529931873083115,
+            "auroc_distort_false_vs_cond": 0.9884
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 1.5202070742845535,
+            "auroc_distort_false_vs_cond": 1.0
+          }
+        },
+        "answer_tok": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 1.4656576320528985,
+            "auroc_distort_false_vs_cond": 0.8102
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": 1.8253740265965461,
+            "auroc_distort_false_vs_cond": 0.403
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": 1.5533426374197006,
+            "auroc_distort_false_vs_cond": 0.7334
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 1.43123839199543,
+            "auroc_distort_false_vs_cond": 0.8344
+          }
+        },
+        "suffix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 1.805505059659481,
+            "auroc_distort_false_vs_cond": 0.9788
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": 1.8244136527180672,
+            "auroc_distort_false_vs_cond": 0.9667
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": 2.319393736124039,
+            "auroc_distort_false_vs_cond": 0.7203
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 1.4646152570843696,
+            "auroc_distort_false_vs_cond": 1.0
+          }
+        }
+      },
+      "arm_c_parametric": {
+        "header": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "prefix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "answer_tok": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.06453236440817514,
+            "sd": 0.18533978552649522,
+            "ci95": [
+              -0.006262174662616517,
+              0.13987039840883672
+            ],
+            "pos_worlds": 14,
+            "sign_p": 0.5412561893463135
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": -0.2476369593706396,
+            "sd": 0.17507897960118776,
+            "ci95": [
+              -0.3196867035598391,
+              -0.17950552932711125
+            ],
+            "pos_worlds": 2,
+            "sign_p": 3.5881996154785156e-05
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.1697359465890461,
+            "sd": 0.16828635744298243,
+            "ci95": [
+              0.10668362316985926,
+              0.23398968478043874
+            ],
+            "pos_worlds": 21,
+            "sign_p": 0.0002771615982055664
+          }
+        },
+        "suffix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.10310133298238118,
+            "sd": 0.12143338811289614,
+            "ci95": [
+              0.05334547534584999,
+              0.14969154360393683
+            ],
+            "pos_worlds": 19,
+            "sign_p": 0.006610751152038574
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": -0.0005800111426247494,
+            "sd": 0.06589034952456495,
+            "ci95": [
+              -0.02565733831789759,
+              0.025732415955927623
+            ],
+            "pos_worlds": 12,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.12175393021768995,
+            "sd": 0.12056221590532645,
+            "ci95": [
+              0.07215742593010266,
+              0.16936282631423738
+            ],
+            "pos_worlds": 20,
+            "sign_p": 0.001543879508972168
+          }
+        }
+      }
+    },
+    "L18_dec_std": {
+      "arm_a_truth_reversal": {
+        "header": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "prefix_end": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "answer_tok": {
+          "pooled_auroc_false_vs_true": 0.6523,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.8193697568650047,
+            "sd": 0.5757343140720016,
+            "ci95": [
+              0.6445098738217107,
+              0.9938074878510085
+            ],
+            "pos_worlds": 35,
+            "sign_p": 1.382612026645802e-06
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.21736719757318496,
+              "sd": 0.6748247646791893,
+              "ci95": [
+                0.006942427037283781,
+                0.416475122468546
+              ],
+              "pos_worlds": 28,
+              "sign_p": 0.01658900337497471
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 1.351023231446743,
+              "sd": 0.7210255993204491,
+              "ci95": [
+                1.139553761635907,
+                1.5692267984570936
+              ],
+              "pos_worlds": 39,
+              "sign_p": 7.457856554538012e-11
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.8897188415750861,
+              "sd": 0.6311154480129376,
+              "ci95": [
+                0.7015907057793811,
+                1.0860255239252
+              ],
+              "pos_worlds": 36,
+              "sign_p": 1.8570244719740003e-07
+            }
+          }
+        },
+        "suffix_end": {
+          "pooled_auroc_false_vs_true": 0.4928,
+          "overall": {
+            "n_worlds": 40,
+            "mean": -0.020727907943849745,
+            "sd": 0.3894577759663872,
+            "ci95": [
+              -0.13560672012584593,
+              0.09646627802207752
+            ],
+            "pos_worlds": 16,
+            "sign_p": 0.26818725105476915
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.06807338651269675,
+              "sd": 0.592641862390623,
+              "ci95": [
+                -0.11454802994150669,
+                0.24444477166514839
+              ],
+              "pos_worlds": 19,
+              "sign_p": 0.8746293123804207
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": -0.07721060239709913,
+              "sd": 0.3809171921544291,
+              "ci95": [
+                -0.19242366686230525,
+                0.04354990495485254
+              ],
+              "pos_worlds": 16,
+              "sign_p": 0.26818725105476915
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": -0.053046507947146895,
+              "sd": 0.41802917444674315,
+              "ci95": [
+                -0.17493139214348047,
+                0.08181474467273796
+              ],
+              "pos_worlds": 18,
+              "sign_p": 0.6358280026288412
+            }
+          }
+        }
+      },
+      "arm_b_benign": {
+        "header": {
+          "benign_copy": {
+            "n": 80,
+            "mean": -1.4338372349739075,
+            "auroc_distort_false_vs_cond": 0.4562
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -3.778352814912796,
+            "auroc_distort_false_vs_cond": 0.9789
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -5.002475160360336,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -2.549044905602932,
+            "auroc_distort_false_vs_cond": 0.8333
+          }
+        },
+        "prefix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 1.6960186332464218,
+            "auroc_distort_false_vs_cond": 0.3242
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -2.532389724254608,
+            "auroc_distort_false_vs_cond": 0.997
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -1.6457527428865433,
+            "auroc_distort_false_vs_cond": 0.9841
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 1.0803628519177437,
+            "auroc_distort_false_vs_cond": 0.522
+          }
+        },
+        "answer_tok": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 1.0241805654019118,
+            "auroc_distort_false_vs_cond": 0.7841
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -1.833648111857474,
+            "auroc_distort_false_vs_cond": 0.9928
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -3.219995653629303,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -0.9221967928111553,
+            "auroc_distort_false_vs_cond": 0.9859
+          }
+        },
+        "suffix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 0.2612468533217907,
+            "auroc_distort_false_vs_cond": 0.9175
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": 1.7555639777332543,
+            "auroc_distort_false_vs_cond": 0.5767
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -1.4938548237085343,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 0.8479971820488572,
+            "auroc_distort_false_vs_cond": 0.8291
+          }
+        }
+      },
+      "arm_c_parametric": {
+        "header": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "prefix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "answer_tok": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": -0.6275472280879816,
+            "sd": 0.91512034790752,
+            "ci95": [
+              -0.997996481295882,
+              -0.2700605246859294
+            ],
+            "pos_worlds": 4,
+            "sign_p": 0.001543879508972168
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 2.104932082196077,
+            "sd": 1.099537729517369,
+            "ci95": [
+              1.6635882680614789,
+              2.54784339978877
+            ],
+            "pos_worlds": 23,
+            "sign_p": 2.9802322387695312e-06
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.8313973235587279,
+            "sd": 0.9218693212698872,
+            "ci95": [
+              0.4432165720551792,
+              1.1880953418349636
+            ],
+            "pos_worlds": 21,
+            "sign_p": 0.0002771615982055664
+          }
+        },
+        "suffix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": -0.740372518491414,
+            "sd": 0.8629474502861246,
+            "ci95": [
+              -1.0799408653026654,
+              -0.42137349665992796
+            ],
+            "pos_worlds": 5,
+            "sign_p": 0.006610751152038574
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.2906256044904391,
+            "sd": 0.43217633501777175,
+            "ci95": [
+              0.12160707817723355,
+              0.45701595935970535
+            ],
+            "pos_worlds": 17,
+            "sign_p": 0.06391465663909912
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": -0.5725708696991205,
+            "sd": 0.736854493623415,
+            "ci95": [
+              -0.8648997530548109,
+              -0.2661311554619008
+            ],
+            "pos_worlds": 5,
+            "sign_p": 0.006610751152038574
+          }
+        }
+      }
+    },
+    "L18_dec_raw": {
+      "arm_a_truth_reversal": {
+        "header": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "prefix_end": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "answer_tok": {
+          "pooled_auroc_false_vs_true": 0.6493,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.244327035608391,
+            "sd": 0.15455182208161838,
+            "ci95": [
+              0.19711411667677262,
+              0.29263638696555666
+            ],
+            "pos_worlds": 36,
+            "sign_p": 1.8570244719740003e-07
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.03316271351650357,
+              "sd": 0.19598988638918224,
+              "ci95": [
+                -0.028865550451446325,
+                0.091615980877541
+              ],
+              "pos_worlds": 26,
+              "sign_p": 0.0806904677519924
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.4170747662894428,
+              "sd": 0.19960641597206438,
+              "ci95": [
+                0.35623488906538114,
+                0.4782670596498064
+              ],
+              "pos_worlds": 39,
+              "sign_p": 7.457856554538012e-11
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.28274362701922656,
+              "sd": 0.17244675959611944,
+              "ci95": [
+                0.23168675574939698,
+                0.3369162719044833
+              ],
+              "pos_worlds": 38,
+              "sign_p": 1.4933903003111482e-09
+            }
+          }
+        },
+        "suffix_end": {
+          "pooled_auroc_false_vs_true": 0.4945,
+          "overall": {
+            "n_worlds": 40,
+            "mean": -0.012890029093250632,
+            "sd": 0.08355765412159388,
+            "ci95": [
+              -0.038039026304225745,
+              0.013002235291060059
+            ],
+            "pos_worlds": 17,
+            "sign_p": 0.42959050784338615
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": -0.009363986970856785,
+              "sd": 0.1404402084298294,
+              "ci95": [
+                -0.053693348321830855,
+                0.032302968988660676
+              ],
+              "pos_worlds": 17,
+              "sign_p": 0.42959050784338615
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.011597041785717011,
+              "sd": 0.07176600386115128,
+              "ci95": [
+                -0.010042434595525264,
+                0.03404653303325171
+              ],
+              "pos_worlds": 23,
+              "sign_p": 0.42959050784338615
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": -0.04090314209461212,
+              "sd": 0.09900063392052033,
+              "ci95": [
+                -0.07012299064546824,
+                -0.008615102395415405
+              ],
+              "pos_worlds": 14,
+              "sign_p": 0.0806904677519924
+            }
+          }
+        }
+      },
+      "arm_b_benign": {
+        "header": {
+          "benign_copy": {
+            "n": 80,
+            "mean": -1.6818612426519395,
+            "auroc_distort_false_vs_cond": 0.6333
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -2.5856940150260925,
+            "auroc_distort_false_vs_cond": 0.9991
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -2.577531772851944,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -2.241987431049347,
+            "auroc_distort_false_vs_cond": 0.993
+          }
+        },
+        "prefix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": -0.6474664580076933,
+            "auroc_distort_false_vs_cond": 0.1452
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -1.8838103011250495,
+            "auroc_distort_false_vs_cond": 0.9858
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -1.7076353520154952,
+            "auroc_distort_false_vs_cond": 0.9559
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -0.8808414340019226,
+            "auroc_distort_false_vs_cond": 0.3519
+          }
+        },
+        "answer_tok": {
+          "benign_copy": {
+            "n": 80,
+            "mean": -0.6456964280456304,
+            "auroc_distort_false_vs_cond": 0.8422
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -1.2818691425025464,
+            "auroc_distort_false_vs_cond": 0.9881
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -1.9454760044813155,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -1.3170392088592053,
+            "auroc_distort_false_vs_cond": 0.9944
+          }
+        },
+        "suffix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": -1.3833177499473095,
+            "auroc_distort_false_vs_cond": 0.9831
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -1.050733995437622,
+            "auroc_distort_false_vs_cond": 0.857
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -1.7834735423326493,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -1.1962436243891716,
+            "auroc_distort_false_vs_cond": 0.9442
+          }
+        }
+      },
+      "arm_c_parametric": {
+        "header": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "prefix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "answer_tok": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": -0.2174854972917173,
+            "sd": 0.27698404387791586,
+            "ci95": [
+              -0.3319309004323764,
+              -0.10939587629141509
+            ],
+            "pos_worlds": 4,
+            "sign_p": 0.001543879508972168
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.6245897305715414,
+            "sd": 0.32273229213872,
+            "ci95": [
+              0.49459329974423677,
+              0.7504308227397916
+            ],
+            "pos_worlds": 23,
+            "sign_p": 2.9802322387695312e-06
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.2490445320597953,
+            "sd": 0.29527954472005236,
+            "ci95": [
+              0.12339811408116173,
+              0.3626819937877977
+            ],
+            "pos_worlds": 20,
+            "sign_p": 0.001543879508972168
+          }
+        },
+        "suffix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": -0.16310164591090545,
+            "sd": 0.19401462994186072,
+            "ci95": [
+              -0.24037654297685043,
+              -0.09123969987914382
+            ],
+            "pos_worlds": 5,
+            "sign_p": 0.006610751152038574
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.1734339516195986,
+            "sd": 0.1555645906466305,
+            "ci95": [
+              0.11083214316103193,
+              0.23532840864111976
+            ],
+            "pos_worlds": 20,
+            "sign_p": 0.001543879508972168
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": -0.08229426108300687,
+            "sd": 0.15746749131810409,
+            "ci95": [
+              -0.14434996338354217,
+              -0.017611328253729484
+            ],
+            "pos_worlds": 8,
+            "sign_p": 0.15158963203430176
+          }
+        }
+      }
+    },
+    "L18_cmp_raw": {
+      "arm_a_truth_reversal": {
+        "header": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "prefix_end": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "answer_tok": {
+          "pooled_auroc_false_vs_true": 0.6178,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.14034293840328854,
+            "sd": 0.13536565110454726,
+            "ci95": [
+              0.09905780424674353,
+              0.17950999012837807
+            ],
+            "pos_worlds": 33,
+            "sign_p": 4.2277022657799534e-05
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.1404508352279663,
+              "sd": 0.1484943220171025,
+              "ci95": [
+                0.09395496547222137,
+                0.18288017012178898
+              ],
+              "pos_worlds": 33,
+              "sign_p": 4.2277022657799534e-05
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.14485930800437927,
+              "sd": 0.14002299126504414,
+              "ci95": [
+                0.101466119363904,
+                0.18504114698618648
+              ],
+              "pos_worlds": 35,
+              "sign_p": 1.382612026645802e-06
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.13571867197752,
+              "sd": 0.14203186065636833,
+              "ci95": [
+                0.09251182757318019,
+                0.1780610409379005
+              ],
+              "pos_worlds": 33,
+              "sign_p": 4.2277022657799534e-05
+            }
+          }
+        },
+        "suffix_end": {
+          "pooled_auroc_false_vs_true": 0.4991,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.012500504155953728,
+            "sd": 0.09154394430139018,
+            "ci95": [
+              -0.013968857191503049,
+              0.039974066553016496
+            ],
+            "pos_worlds": 24,
+            "sign_p": 0.26818725105476915
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": -0.0779570460319519,
+              "sd": 0.1717888377669493,
+              "ci95": [
+                -0.1284324548393488,
+                -0.027640073299408006
+              ],
+              "pos_worlds": 15,
+              "sign_p": 0.1538599441628321
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.11704603582620621,
+              "sd": 0.0840141028620829,
+              "ci95": [
+                0.09110277608036994,
+                0.1420841332525015
+              ],
+              "pos_worlds": 38,
+              "sign_p": 1.4933903003111482e-09
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": -0.0015874773263931275,
+              "sd": 0.0735295851398636,
+              "ci95": [
+                -0.02509475387632847,
+                0.020993560329079623
+              ],
+              "pos_worlds": 22,
+              "sign_p": 0.6358280026288412
+            }
+          }
+        }
+      },
+      "arm_b_benign": {
+        "header": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 2.2718228578567503,
+            "auroc_distort_false_vs_cond": 0.997
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": 2.9310269325971605,
+            "auroc_distort_false_vs_cond": 0.7575
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": 3.0690224528312684,
+            "auroc_distort_false_vs_cond": 0.6156
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 2.284657509624958,
+            "auroc_distort_false_vs_cond": 0.9967
+          }
+        },
+        "prefix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 1.6954322099685668,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": 2.662776345014572,
+            "auroc_distort_false_vs_cond": 0.6784
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": 2.2563430100679396,
+            "auroc_distort_false_vs_cond": 0.9762
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 1.890249416232109,
+            "auroc_distort_false_vs_cond": 1.0
+          }
+        },
+        "answer_tok": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 1.8361747905611991,
+            "auroc_distort_false_vs_cond": 0.6542
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": 2.0095536738634108,
+            "auroc_distort_false_vs_cond": 0.4706
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": 2.175950637459755,
+            "auroc_distort_false_vs_cond": 0.2772
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 1.7274709224700928,
+            "auroc_distort_false_vs_cond": 0.7561
+          }
+        },
+        "suffix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 2.3461089611053465,
+            "auroc_distort_false_vs_cond": 0.9805
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": 2.1916863083839417,
+            "auroc_distort_false_vs_cond": 0.995
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": 2.748927026987076,
+            "auroc_distort_false_vs_cond": 0.7841
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 1.865217822790146,
+            "auroc_distort_false_vs_cond": 1.0
+          }
+        }
+      },
+      "arm_c_parametric": {
+        "header": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "prefix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "answer_tok": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.12100986308521694,
+            "sd": 0.2550021229667428,
+            "ci95": [
+              0.029171572873989745,
+              0.23142288765973515
+            ],
+            "pos_worlds": 15,
+            "sign_p": 0.30745625495910645
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": -0.24536768843730292,
+            "sd": 0.19252476864077175,
+            "ci95": [
+              -0.31887021191004244,
+              -0.16933351591643359
+            ],
+            "pos_worlds": 4,
+            "sign_p": 0.001543879508972168
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.2396106355720096,
+            "sd": 0.2630308634105139,
+            "ci95": [
+              0.13927000115315116,
+              0.33996778337491873
+            ],
+            "pos_worlds": 22,
+            "sign_p": 3.5881996154785156e-05
+          }
+        },
+        "suffix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.12283710969818962,
+            "sd": 0.14235647240609245,
+            "ci95": [
+              0.06670387395554118,
+              0.1784366060048342
+            ],
+            "pos_worlds": 18,
+            "sign_p": 0.022655844688415527
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": -0.00491741630766127,
+            "sd": 0.07260751955938849,
+            "ci95": [
+              -0.03201186085740726,
+              0.02406723524133362
+            ],
+            "pos_worlds": 12,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.12340884572929807,
+            "sd": 0.14891126342770505,
+            "ci95": [
+              0.06198945293823878,
+              0.18205706961452955
+            ],
+            "pos_worlds": 19,
+            "sign_p": 0.006610751152038574
+          }
+        }
+      }
+    },
+    "L19_dec_std": {
+      "arm_a_truth_reversal": {
+        "header": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "prefix_end": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "answer_tok": {
+          "pooled_auroc_false_vs_true": 0.703,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.9862595385561388,
+            "sd": 0.4831421438894981,
+            "ci95": [
+              0.8364327126462013,
+              1.1298935984354468
+            ],
+            "pos_worlds": 39,
+            "sign_p": 7.457856554538012e-11
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.4971737591549754,
+              "sd": 0.5339338921536989,
+              "ci95": [
+                0.3354107391554862,
+                0.6488130608899517
+              ],
+              "pos_worlds": 33,
+              "sign_p": 4.2277022657799534e-05
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 1.3906027091667057,
+              "sd": 0.6454628593191095,
+              "ci95": [
+                1.1907730220584198,
+                1.5768105031875892
+              ],
+              "pos_worlds": 39,
+              "sign_p": 7.457856554538012e-11
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 1.071002147346735,
+              "sd": 0.5390163624035718,
+              "ci95": [
+                0.9049465305730701,
+                1.2427719779219477
+              ],
+              "pos_worlds": 39,
+              "sign_p": 7.457856554538012e-11
+            }
+          }
+        },
+        "suffix_end": {
+          "pooled_auroc_false_vs_true": 0.4924,
+          "overall": {
+            "n_worlds": 40,
+            "mean": -0.040359238162636764,
+            "sd": 0.3218042707348711,
+            "ci95": [
+              -0.1367410585656762,
+              0.05940655114129182
+            ],
+            "pos_worlds": 16,
+            "sign_p": 0.26818725105476915
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.047824210859835146,
+              "sd": 0.4796267045984391,
+              "ci95": [
+                -0.10694942737463863,
+                0.18734462303109442
+              ],
+              "pos_worlds": 20,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": -0.11697986908257008,
+              "sd": 0.333347069855242,
+              "ci95": [
+                -0.21675792477093636,
+                -0.01062690790742636
+              ],
+              "pos_worlds": 13,
+              "sign_p": 0.03847730828420026
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": -0.05192205626517534,
+              "sd": 0.38230218515429465,
+              "ci95": [
+                -0.16356232987716796,
+                0.07093117529526323
+              ],
+              "pos_worlds": 16,
+              "sign_p": 0.26818725105476915
+            }
+          }
+        }
+      },
+      "arm_b_benign": {
+        "header": {
+          "benign_copy": {
+            "n": 80,
+            "mean": -0.5034145761281252,
+            "auroc_distort_false_vs_cond": 0.5506
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -4.1315514087677006,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -3.3549353003501894,
+            "auroc_distort_false_vs_cond": 0.9994
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -1.5175295643508435,
+            "auroc_distort_false_vs_cond": 0.8758
+          }
+        },
+        "prefix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 2.9240299478173255,
+            "auroc_distort_false_vs_cond": 0.0783
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -1.8325313366949558,
+            "auroc_distort_false_vs_cond": 0.9812
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -1.0644947588443756,
+            "auroc_distort_false_vs_cond": 0.9463
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 3.0456273704767227,
+            "auroc_distort_false_vs_cond": 0.0669
+          }
+        },
+        "answer_tok": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 1.5903746027499437,
+            "auroc_distort_false_vs_cond": 0.5495
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -1.6852336974814535,
+            "auroc_distort_false_vs_cond": 0.9923
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -1.9899548232555389,
+            "auroc_distort_false_vs_cond": 0.9966
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 0.23263176176697015,
+            "auroc_distort_false_vs_cond": 0.9294
+          }
+        },
+        "suffix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 0.11999543942511082,
+            "auroc_distort_false_vs_cond": 0.8752
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": 1.136028441041708,
+            "auroc_distort_false_vs_cond": 0.6086
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -1.5300185069441796,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 0.7719252120703459,
+            "auroc_distort_false_vs_cond": 0.7327
+          }
+        }
+      },
+      "arm_c_parametric": {
+        "header": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "prefix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "answer_tok": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": -0.5633557389179865,
+            "sd": 0.7312044900198633,
+            "ci95": [
+              -0.8714899817792079,
+              -0.2819456545429098
+            ],
+            "pos_worlds": 6,
+            "sign_p": 0.022655844688415527
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 1.8816177894671757,
+            "sd": 0.9586449770029144,
+            "ci95": [
+              1.4954479132882421,
+              2.253864850745433
+            ],
+            "pos_worlds": 23,
+            "sign_p": 2.9802322387695312e-06
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.9956760348545179,
+            "sd": 0.8139830757960116,
+            "ci95": [
+              0.650559850047446,
+              1.3017120327645288
+            ],
+            "pos_worlds": 22,
+            "sign_p": 3.5881996154785156e-05
+          }
+        },
+        "suffix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": -0.671080726923214,
+            "sd": 0.8149050022007528,
+            "ci95": [
+              -0.9949173015904509,
+              -0.3726057572755963
+            ],
+            "pos_worlds": 5,
+            "sign_p": 0.006610751152038574
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.40793263684544295,
+            "sd": 0.4676212647482301,
+            "ci95": [
+              0.2246525958335648,
+              0.5953955150364586
+            ],
+            "pos_worlds": 19,
+            "sign_p": 0.006610751152038574
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": -0.3915450726118353,
+            "sd": 0.6959031230161309,
+            "ci95": [
+              -0.668859752986787,
+              -0.10979813163996598
+            ],
+            "pos_worlds": 7,
+            "sign_p": 0.06391465663909912
+          }
+        }
+      }
+    },
+    "L19_dec_raw": {
+      "arm_a_truth_reversal": {
+        "header": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "prefix_end": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "answer_tok": {
+          "pooled_auroc_false_vs_true": 0.67,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.29795234774549806,
+            "sd": 0.17113405485313654,
+            "ci95": [
+              0.24575821177723506,
+              0.3497052114984641
+            ],
+            "pos_worlds": 38,
+            "sign_p": 1.4933903003111482e-09
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.08990326076745987,
+              "sd": 0.2105888534989966,
+              "ci95": [
+                0.026901558507233858,
+                0.1524392942711711
+              ],
+              "pos_worlds": 27,
+              "sign_p": 0.03847730828420026
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.4631383292376995,
+              "sd": 0.22107211975001323,
+              "ci95": [
+                0.394806914050132,
+                0.5294826816022395
+              ],
+              "pos_worlds": 40,
+              "sign_p": 1.8189894035458565e-12
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.34081545323133466,
+              "sd": 0.19688433140595332,
+              "ci95": [
+                0.28218726385384796,
+                0.4029143879190087
+              ],
+              "pos_worlds": 38,
+              "sign_p": 1.4933903003111482e-09
+            }
+          }
+        },
+        "suffix_end": {
+          "pooled_auroc_false_vs_true": 0.4936,
+          "overall": {
+            "n_worlds": 40,
+            "mean": -0.018316291769345603,
+            "sd": 0.0784321705876814,
+            "ci95": [
+              -0.04129592701792717,
+              0.007211228621502711
+            ],
+            "pos_worlds": 16,
+            "sign_p": 0.26818725105476915
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": -0.015438492596149444,
+              "sd": 0.1311372503363527,
+              "ci95": [
+                -0.056942024528980256,
+                0.02415477350354193
+              ],
+              "pos_worlds": 19,
+              "sign_p": 0.8746293123804207
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.007204093039035797,
+              "sd": 0.07732093878978026,
+              "ci95": [
+                -0.015639354251325132,
+                0.032437521740794145
+              ],
+              "pos_worlds": 21,
+              "sign_p": 0.8746293123804207
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": -0.046714475750923155,
+              "sd": 0.10932740093862102,
+              "ci95": [
+                -0.07874082289636135,
+                -0.011199082508683206
+              ],
+              "pos_worlds": 14,
+              "sign_p": 0.0806904677519924
+            }
+          }
+        }
+      },
+      "arm_b_benign": {
+        "header": {
+          "benign_copy": {
+            "n": 80,
+            "mean": -2.1109349742531776,
+            "auroc_distort_false_vs_cond": 0.4133
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -3.624407264590263,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -3.029641145467758,
+            "auroc_distort_false_vs_cond": 0.9875
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -2.946726083755493,
+            "auroc_distort_false_vs_cond": 0.9797
+          }
+        },
+        "prefix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": -0.6654852248728276,
+            "auroc_distort_false_vs_cond": 0.0002
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -2.471747596561909,
+            "auroc_distort_false_vs_cond": 0.8516
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -2.3562697172164917,
+            "auroc_distort_false_vs_cond": 0.7863
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -0.949796212092042,
+            "auroc_distort_false_vs_cond": 0.0161
+          }
+        },
+        "answer_tok": {
+          "benign_copy": {
+            "n": 80,
+            "mean": -0.9909733206033706,
+            "auroc_distort_false_vs_cond": 0.5317
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -1.8321963414549827,
+            "auroc_distort_false_vs_cond": 0.9739
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -2.335301285982132,
+            "auroc_distort_false_vs_cond": 0.9994
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -1.6652584791183471,
+            "auroc_distort_false_vs_cond": 0.9742
+          }
+        },
+        "suffix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": -2.3287557423114777,
+            "auroc_distort_false_vs_cond": 0.8958
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -2.1302156895399094,
+            "auroc_distort_false_vs_cond": 0.7827
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -2.8435061514377593,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -2.0683270707726478,
+            "auroc_distort_false_vs_cond": 0.7309
+          }
+        }
+      },
+      "arm_c_parametric": {
+        "header": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "prefix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "answer_tok": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": -0.18136718465636173,
+            "sd": 0.29309942988689036,
+            "ci95": [
+              -0.3026031949453884,
+              -0.07062571925990707
+            ],
+            "pos_worlds": 7,
+            "sign_p": 0.06391465663909912
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.726704180964993,
+            "sd": 0.30714703418693085,
+            "ci95": [
+              0.6052135858296728,
+              0.8429247457766905
+            ],
+            "pos_worlds": 23,
+            "sign_p": 2.9802322387695312e-06
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.33091029855940074,
+            "sd": 0.3326937216099934,
+            "ci95": [
+              0.18383653382253318,
+              0.4497132510774664
+            ],
+            "pos_worlds": 21,
+            "sign_p": 0.0002771615982055664
+          }
+        },
+        "suffix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": -0.18374616652727127,
+            "sd": 0.22056917871852097,
+            "ci95": [
+              -0.2739091460075643,
+              -0.10113697503176004
+            ],
+            "pos_worlds": 5,
+            "sign_p": 0.006610751152038574
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.21288410988118914,
+            "sd": 0.19266852758642375,
+            "ci95": [
+              0.1364045104632775,
+              0.29021869454946775
+            ],
+            "pos_worlds": 18,
+            "sign_p": 0.022655844688415527
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": -0.057125950853029885,
+            "sd": 0.1919591101084652,
+            "ci95": [
+              -0.13366662826802994,
+              0.019599953624937248
+            ],
+            "pos_worlds": 10,
+            "sign_p": 0.5412561893463135
+          }
+        }
+      }
+    },
+    "L19_cmp_raw": {
+      "arm_a_truth_reversal": {
+        "header": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "prefix_end": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "answer_tok": {
+          "pooled_auroc_false_vs_true": 0.5956,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.11938639332850773,
+            "sd": 0.12145697002024541,
+            "ci95": [
+              0.08247800070792435,
+              0.15568150565028183
+            ],
+            "pos_worlds": 34,
+            "sign_p": 8.364584573428147e-06
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.09781852066516876,
+              "sd": 0.14190521870855552,
+              "ci95": [
+                0.05608296662569046,
+                0.13981154419481753
+              ],
+              "pos_worlds": 32,
+              "sign_p": 0.0001821658297558315
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.14653048068284988,
+              "sd": 0.12275147218775691,
+              "ci95": [
+                0.10838305540382862,
+                0.18339994996786113
+              ],
+              "pos_worlds": 37,
+              "sign_p": 1.946500560734421e-08
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.11381017863750457,
+              "sd": 0.13251564099166444,
+              "ci95": [
+                0.07344198361039161,
+                0.15346156857907772
+              ],
+              "pos_worlds": 31,
+              "sign_p": 0.0006795482549932785
+            }
+          }
+        },
+        "suffix_end": {
+          "pooled_auroc_false_vs_true": 0.4845,
+          "overall": {
+            "n_worlds": 40,
+            "mean": -0.018219268321990965,
+            "sd": 0.09226330448942227,
+            "ci95": [
+              -0.045739443898200983,
+              0.010126099040110897
+            ],
+            "pos_worlds": 18,
+            "sign_p": 0.6358280026288412
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": -0.11798118352890015,
+              "sd": 0.1831700774030582,
+              "ci95": [
+                -0.17338039346039297,
+                -0.06562095507979396
+              ],
+              "pos_worlds": 10,
+              "sign_p": 0.0022214337732293643
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0788564383983612,
+              "sd": 0.08795497021596407,
+              "ci95": [
+                0.050807409062981604,
+                0.10669243864715096
+              ],
+              "pos_worlds": 30,
+              "sign_p": 0.0022214337732293643
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": -0.01553305983543396,
+              "sd": 0.08744965476331332,
+              "ci95": [
+                -0.04313551619648933,
+                0.011564208120107592
+              ],
+              "pos_worlds": 17,
+              "sign_p": 0.42959050784338615
+            }
+          }
+        }
+      },
+      "arm_b_benign": {
+        "header": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 2.778481039404869,
+            "auroc_distort_false_vs_cond": 0.9948
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": 3.6626703947782517,
+            "auroc_distort_false_vs_cond": 0.7552
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": 3.569314938783646,
+            "auroc_distort_false_vs_cond": 0.8237
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 3.135047960281372,
+            "auroc_distort_false_vs_cond": 0.9539
+          }
+        },
+        "prefix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 2.094328399002552,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": 3.6218188405036926,
+            "auroc_distort_false_vs_cond": 0.6639
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": 3.0321407854557036,
+            "auroc_distort_false_vs_cond": 0.9747
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 2.4142202511429787,
+            "auroc_distort_false_vs_cond": 1.0
+          }
+        },
+        "answer_tok": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 2.318544454872608,
+            "auroc_distort_false_vs_cond": 0.8823
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": 2.7735568314790724,
+            "auroc_distort_false_vs_cond": 0.5367
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": 2.945173567533493,
+            "auroc_distort_false_vs_cond": 0.3566
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 2.284901235997677,
+            "auroc_distort_false_vs_cond": 0.8981
+          }
+        },
+        "suffix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 3.4926154971122743,
+            "auroc_distort_false_vs_cond": 0.9928
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": 3.2958211660385133,
+            "auroc_distort_false_vs_cond": 0.9988
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": 4.036694610118866,
+            "auroc_distort_false_vs_cond": 0.8419
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 2.8127559393644335,
+            "auroc_distort_false_vs_cond": 1.0
+          }
+        }
+      },
+      "arm_c_parametric": {
+        "header": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "prefix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "answer_tok": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.016435055269135367,
+            "sd": 0.36932220874859006,
+            "ci95": [
+              -0.12130772525237667,
+              0.167989071458578
+            ],
+            "pos_worlds": 12,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": -0.24283742407957712,
+            "sd": 0.31929194898853824,
+            "ci95": [
+              -0.3689255486759875,
+              -0.12323999384211169
+            ],
+            "pos_worlds": 5,
+            "sign_p": 0.006610751152038574
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.24468347595797646,
+            "sd": 0.3115604509895603,
+            "ci95": [
+              0.12488272707495425,
+              0.3677542341252168
+            ],
+            "pos_worlds": 18,
+            "sign_p": 0.022655844688415527
+          }
+        },
+        "suffix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.14234536886215213,
+            "sd": 0.1644034729295297,
+            "ci95": [
+              0.08033411593900786,
+              0.2077618968155648
+            ],
+            "pos_worlds": 19,
+            "sign_p": 0.006610751152038574
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": -0.021109908819198612,
+            "sd": 0.09330941887682422,
+            "ci95": [
+              -0.05698470820983251,
+              0.01681094095110891
+            ],
+            "pos_worlds": 13,
+            "sign_p": 0.8388197422027588
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0674425396654341,
+            "sd": 0.16132134460292363,
+            "ci95": [
+              -0.0002783490551842567,
+              0.13007259774539207
+            ],
+            "pos_worlds": 17,
+            "sign_p": 0.06391465663909912
+          }
+        }
+      }
+    },
+    "L20_dec_std": {
+      "arm_a_truth_reversal": {
+        "header": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "prefix_end": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "answer_tok": {
+          "pooled_auroc_false_vs_true": 0.682,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.7846896018832922,
+            "sd": 0.39144571667183947,
+            "ci95": [
+              0.6628431887241701,
+              0.8996444737864657
+            ],
+            "pos_worlds": 39,
+            "sign_p": 7.457856554538012e-11
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.4378335736691952,
+              "sd": 0.42092151058707516,
+              "ci95": [
+                0.3116088662110269,
+                0.560231783017516
+              ],
+              "pos_worlds": 34,
+              "sign_p": 8.364584573428147e-06
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 1.105521341599524,
+              "sd": 0.5359845502884927,
+              "ci95": [
+                0.9470265325298532,
+                1.2615232807956636
+              ],
+              "pos_worlds": 39,
+              "sign_p": 7.457856554538012e-11
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.8107138903811574,
+              "sd": 0.4329914654301772,
+              "ci95": [
+                0.6797276049247011,
+                0.9437150496663526
+              ],
+              "pos_worlds": 38,
+              "sign_p": 1.4933903003111482e-09
+            }
+          }
+        },
+        "suffix_end": {
+          "pooled_auroc_false_vs_true": 0.5037,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0317964067682624,
+            "sd": 0.3335789466131165,
+            "ci95": [
+              -0.06783615902842334,
+              0.1363471790418649
+            ],
+            "pos_worlds": 18,
+            "sign_p": 0.6358280026288412
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.20922328438609838,
+              "sd": 0.4890691231998475,
+              "ci95": [
+                0.058645534450188275,
+                0.35644317550119003
+              ],
+              "pos_worlds": 26,
+              "sign_p": 0.0806904677519924
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": -0.09248107764869928,
+              "sd": 0.31615985915931666,
+              "ci95": [
+                -0.18827290043700487,
+                0.007102517290040819
+              ],
+              "pos_worlds": 13,
+              "sign_p": 0.03847730828420026
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": -0.021352986432611944,
+              "sd": 0.3881739224250161,
+              "ci95": [
+                -0.13699065804481506,
+                0.104257541024126
+              ],
+              "pos_worlds": 17,
+              "sign_p": 0.42959050784338615
+            }
+          }
+        }
+      },
+      "arm_b_benign": {
+        "header": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 0.6740513751283288,
+            "auroc_distort_false_vs_cond": 0.1952
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -3.0752375327050685,
+            "auroc_distort_false_vs_cond": 0.9766
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -2.6566530138254167,
+            "auroc_distort_false_vs_cond": 0.9675
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -0.3595386194065213,
+            "auroc_distort_false_vs_cond": 0.4336
+          }
+        },
+        "prefix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 3.249867671728134,
+            "auroc_distort_false_vs_cond": 0.0586
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -1.3059450721368193,
+            "auroc_distort_false_vs_cond": 0.9613
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -1.0897680208086968,
+            "auroc_distort_false_vs_cond": 0.9528
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 3.001086838543415,
+            "auroc_distort_false_vs_cond": 0.0891
+          }
+        },
+        "answer_tok": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 2.2576338537037373,
+            "auroc_distort_false_vs_cond": 0.6492
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -0.17825869945809245,
+            "auroc_distort_false_vs_cond": 0.9872
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -1.0383303083479405,
+            "auroc_distort_false_vs_cond": 0.9994
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 1.6127603657543659,
+            "auroc_distort_false_vs_cond": 0.8838
+          }
+        },
+        "suffix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 1.2842480108141898,
+            "auroc_distort_false_vs_cond": 0.8711
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": 2.307828572392464,
+            "auroc_distort_false_vs_cond": 0.6002
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -0.6774525713175535,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 1.9992391377687455,
+            "auroc_distort_false_vs_cond": 0.7122
+          }
+        }
+      },
+      "arm_c_parametric": {
+        "header": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "prefix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "answer_tok": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": -0.5388491331703132,
+            "sd": 0.6338962105447149,
+            "ci95": [
+              -0.8060219172181355,
+              -0.29273828394297097
+            ],
+            "pos_worlds": 6,
+            "sign_p": 0.022655844688415527
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 1.593151996533076,
+            "sd": 0.8653400044151359,
+            "ci95": [
+              1.2622411304877863,
+              1.945523510293828
+            ],
+            "pos_worlds": 24,
+            "sign_p": 1.1920928955078125e-07
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.5806108994616402,
+            "sd": 0.8041507204509317,
+            "ci95": [
+              0.259665588191193,
+              0.890883542312723
+            ],
+            "pos_worlds": 16,
+            "sign_p": 0.15158963203430176
+          }
+        },
+        "suffix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": -0.6430245966960987,
+            "sd": 0.7982081348207133,
+            "ci95": [
+              -0.9626351828583414,
+              -0.34963953410689214
+            ],
+            "pos_worlds": 4,
+            "sign_p": 0.001543879508972168
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.5028716267810928,
+            "sd": 0.5340899690989552,
+            "ci95": [
+              0.293146851607081,
+              0.7170419929756053
+            ],
+            "pos_worlds": 19,
+            "sign_p": 0.006610751152038574
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": -0.290882526896894,
+            "sd": 0.6320803486210811,
+            "ci95": [
+              -0.5337690751844396,
+              -0.033301212072062096
+            ],
+            "pos_worlds": 9,
+            "sign_p": 0.30745625495910645
+          }
+        }
+      }
+    },
+    "L20_dec_raw": {
+      "arm_a_truth_reversal": {
+        "header": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "prefix_end": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "answer_tok": {
+          "pooled_auroc_false_vs_true": 0.6709,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.30551286997894445,
+            "sd": 0.1724910212025135,
+            "ci95": [
+              0.25304493251256643,
+              0.3565112968720496
+            ],
+            "pos_worlds": 38,
+            "sign_p": 1.4933903003111482e-09
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.1065860141068697,
+              "sd": 0.2176196358680336,
+              "ci95": [
+                0.04146810620091856,
+                0.17103982512839136
+              ],
+              "pos_worlds": 25,
+              "sign_p": 0.1538599441628321
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.4662148289382458,
+              "sd": 0.22099322869225066,
+              "ci95": [
+                0.40000476863235235,
+                0.5323106377385557
+              ],
+              "pos_worlds": 40,
+              "sign_p": 1.8189894035458565e-12
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.3437377668917179,
+              "sd": 0.19575998741706552,
+              "ci95": [
+                0.2824206209182739,
+                0.40458191607147453
+              ],
+              "pos_worlds": 38,
+              "sign_p": 1.4933903003111482e-09
+            }
+          }
+        },
+        "suffix_end": {
+          "pooled_auroc_false_vs_true": 0.4944,
+          "overall": {
+            "n_worlds": 40,
+            "mean": -0.014640221496423083,
+            "sd": 0.08213286257881675,
+            "ci95": [
+              -0.03929104863355557,
+              0.011140722321967273
+            ],
+            "pos_worlds": 18,
+            "sign_p": 0.6358280026288412
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0023387834429740907,
+              "sd": 0.13955639506261305,
+              "ci95": [
+                -0.04130714099854231,
+                0.04464625380933282
+              ],
+              "pos_worlds": 21,
+              "sign_p": 0.8746293123804207
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.015511086583137513,
+              "sd": 0.07972617621814498,
+              "ci95": [
+                -0.008644814938306808,
+                0.04098858296871184
+              ],
+              "pos_worlds": 24,
+              "sign_p": 0.26818725105476915
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": -0.06177053451538086,
+              "sd": 0.11236507481110576,
+              "ci95": [
+                -0.09506438836455344,
+                -0.025738972947001462
+              ],
+              "pos_worlds": 15,
+              "sign_p": 0.1538599441628321
+            }
+          }
+        }
+      },
+      "arm_b_benign": {
+        "header": {
+          "benign_copy": {
+            "n": 80,
+            "mean": -2.403360424935818,
+            "auroc_distort_false_vs_cond": 0.2773
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -4.324839487671852,
+            "auroc_distort_false_vs_cond": 0.9994
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -3.505311053991318,
+            "auroc_distort_false_vs_cond": 0.9472
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -3.3728017687797545,
+            "auroc_distort_false_vs_cond": 0.935
+          }
+        },
+        "prefix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": -0.8880065366625786,
+            "auroc_distort_false_vs_cond": 0.0
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -2.9479318857192993,
+            "auroc_distort_false_vs_cond": 0.7678
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -2.98022780418396,
+            "auroc_distort_false_vs_cond": 0.7722
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -1.3685265511274338,
+            "auroc_distort_false_vs_cond": 0.0217
+          }
+        },
+        "answer_tok": {
+          "benign_copy": {
+            "n": 80,
+            "mean": -1.345588133484125,
+            "auroc_distort_false_vs_cond": 0.5978
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -1.9735481187701225,
+            "auroc_distort_false_vs_cond": 0.9423
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -2.655894786119461,
+            "auroc_distort_false_vs_cond": 0.9994
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -1.8479690983891488,
+            "auroc_distort_false_vs_cond": 0.9589
+          }
+        },
+        "suffix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": -2.827116051316261,
+            "auroc_distort_false_vs_cond": 0.9031
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": -2.6094560503959654,
+            "auroc_distort_false_vs_cond": 0.8028
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": -3.4797818839550017,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": -2.4852218985557557,
+            "auroc_distort_false_vs_cond": 0.7255
+          }
+        }
+      },
+      "arm_c_parametric": {
+        "header": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "prefix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "answer_tok": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": -0.1771888029244211,
+            "sd": 0.31104466398671066,
+            "ci95": [
+              -0.30607729595568445,
+              -0.06082111913710848
+            ],
+            "pos_worlds": 8,
+            "sign_p": 0.15158963203430176
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.8008590531018046,
+            "sd": 0.36342696391310303,
+            "ci95": [
+              0.6570878269875216,
+              0.9441611278388231
+            ],
+            "pos_worlds": 23,
+            "sign_p": 2.9802322387695312e-06
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.30727892907129395,
+            "sd": 0.36641501323439923,
+            "ci95": [
+              0.15076262420043346,
+              0.441865937008212
+            ],
+            "pos_worlds": 20,
+            "sign_p": 0.001543879508972168
+          }
+        },
+        "suffix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": -0.16596712999873692,
+            "sd": 0.22520418872072404,
+            "ci95": [
+              -0.2567610386759043,
+              -0.08360150708920429
+            ],
+            "pos_worlds": 7,
+            "sign_p": 0.06391465663909912
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.2815651446580887,
+            "sd": 0.25404730053290386,
+            "ci95": [
+              0.18107147407200602,
+              0.38260366068118123
+            ],
+            "pos_worlds": 19,
+            "sign_p": 0.006610751152038574
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": -0.038813857568634876,
+            "sd": 0.17931896000456643,
+            "ci95": [
+              -0.10897534261975024,
+              0.031109888686074096
+            ],
+            "pos_worlds": 12,
+            "sign_p": 1.0
+          }
+        }
+      }
+    },
+    "L20_cmp_raw": {
+      "arm_a_truth_reversal": {
+        "header": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "prefix_end": {
+          "pooled_auroc_false_vs_true": 0.5,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.0,
+              "sd": 0.0,
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "pos_worlds": 0,
+              "sign_p": 1.0
+            }
+          }
+        },
+        "answer_tok": {
+          "pooled_auroc_false_vs_true": 0.575,
+          "overall": {
+            "n_worlds": 40,
+            "mean": 0.09301153620084127,
+            "sd": 0.13267039905194664,
+            "ci95": [
+              0.054197146209577725,
+              0.13348780990888673
+            ],
+            "pos_worlds": 33,
+            "sign_p": 4.2277022657799534e-05
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": 0.06202154755592346,
+              "sd": 0.1619019667021936,
+              "ci95": [
+                0.01569022260606289,
+                0.11075659200549119
+              ],
+              "pos_worlds": 24,
+              "sign_p": 0.26818725105476915
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.12734975814819335,
+              "sd": 0.12848844183620728,
+              "ci95": [
+                0.08815605413168669,
+                0.1685520276799798
+              ],
+              "pos_worlds": 35,
+              "sign_p": 1.382612026645802e-06
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": 0.08966330289840699,
+              "sd": 0.14069956450132245,
+              "ci95": [
+                0.04803464263677597,
+                0.13228001102805137
+              ],
+              "pos_worlds": 29,
+              "sign_p": 0.006426576095691416
+            }
+          }
+        },
+        "suffix_end": {
+          "pooled_auroc_false_vs_true": 0.4886,
+          "overall": {
+            "n_worlds": 40,
+            "mean": -0.007016905148824054,
+            "sd": 0.09691164009826589,
+            "ci95": [
+              -0.0357235212624073,
+              0.022389834846059425
+            ],
+            "pos_worlds": 21,
+            "sign_p": 0.8746293123804207
+          },
+          "by_directive": {
+            "distort": {
+              "n_worlds": 40,
+              "mean": -0.13031724095344543,
+              "sd": 0.17734336062522119,
+              "ci95": [
+                -0.1836733224987984,
+                -0.07894340336322789
+              ],
+              "pos_worlds": 8,
+              "sign_p": 0.0001821658297558315
+            },
+            "honest": {
+              "n_worlds": 40,
+              "mean": 0.12137253880500794,
+              "sd": 0.10618864458270702,
+              "ci95": [
+                0.0886018605530262,
+                0.1532536683231592
+              ],
+              "pos_worlds": 32,
+              "sign_p": 0.0001821658297558315
+            },
+            "neutral": {
+              "n_worlds": 40,
+              "mean": -0.012106013298034669,
+              "sd": 0.08476446418786,
+              "ci95": [
+                -0.038278000503778456,
+                0.01512021467089652
+              ],
+              "pos_worlds": 19,
+              "sign_p": 0.8746293123804207
+            }
+          }
+        }
+      },
+      "arm_b_benign": {
+        "header": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 3.121008598804474,
+            "auroc_distort_false_vs_cond": 0.9677
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": 4.1072003781795505,
+            "auroc_distort_false_vs_cond": 0.5952
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": 4.024662202596664,
+            "auroc_distort_false_vs_cond": 0.6584
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 3.44968259036541,
+            "auroc_distort_false_vs_cond": 0.9102
+          }
+        },
+        "prefix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 2.2796198785305024,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": 3.9192008107900618,
+            "auroc_distort_false_vs_cond": 0.6734
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": 3.625816583633423,
+            "auroc_distort_false_vs_cond": 0.8878
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 2.681348930299282,
+            "auroc_distort_false_vs_cond": 1.0
+          }
+        },
+        "answer_tok": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 2.802818921208382,
+            "auroc_distort_false_vs_cond": 0.7541
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": 3.0839344769716264,
+            "auroc_distort_false_vs_cond": 0.4884
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": 3.194111716747284,
+            "auroc_distort_false_vs_cond": 0.3563
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 2.595634165406227,
+            "auroc_distort_false_vs_cond": 0.8914
+          }
+        },
+        "suffix_end": {
+          "benign_copy": {
+            "n": 80,
+            "mean": 3.750890204310417,
+            "auroc_distort_false_vs_cond": 0.9984
+          },
+          "benign_correction": {
+            "n": 80,
+            "mean": 3.4455719143152237,
+            "auroc_distort_false_vs_cond": 1.0
+          },
+          "benign_ignorance": {
+            "n": 40,
+            "mean": 4.386689352989197,
+            "auroc_distort_false_vs_cond": 0.8888
+          },
+          "benign_quote": {
+            "n": 80,
+            "mean": 3.1288399577140806,
+            "auroc_distort_false_vs_cond": 1.0
+          }
+        }
+      },
+      "arm_c_parametric": {
+        "header": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "prefix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.0,
+            "sd": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "pos_worlds": 0,
+            "sign_p": 1.0
+          }
+        },
+        "answer_tok": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.05129053526454502,
+            "sd": 0.374437343411753,
+            "ci95": [
+              -0.08891791750987374,
+              0.19920621108677652
+            ],
+            "pos_worlds": 15,
+            "sign_p": 0.30745625495910645
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": -0.24398832519849142,
+            "sd": 0.4193257230895307,
+            "ci95": [
+              -0.40445700027048587,
+              -0.0869795361326801
+            ],
+            "pos_worlds": 7,
+            "sign_p": 0.06391465663909912
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.2209658357832167,
+            "sd": 0.3268097968660035,
+            "ci95": [
+              0.09376283064484597,
+              0.34913761102490953
+            ],
+            "pos_worlds": 16,
+            "sign_p": 0.15158963203430176
+          }
+        },
+        "suffix_end": {
+          "counterfactual_evidence": {
+            "n_worlds": 24,
+            "mean": 0.11842134263780381,
+            "sd": 0.16418286966790052,
+            "ci95": [
+              0.05587604699863327,
+              0.18441154385606442
+            ],
+            "pos_worlds": 19,
+            "sign_p": 0.006610751152038574
+          },
+          "no_evidence": {
+            "n_worlds": 24,
+            "mean": 0.007228218846850924,
+            "sd": 0.10389987878586293,
+            "ci95": [
+              -0.03480159466465315,
+              0.048022478901677594
+            ],
+            "pos_worlds": 14,
+            "sign_p": 0.5412561893463135
+          },
+          "with_evidence": {
+            "n_worlds": 24,
+            "mean": 0.06105390853352016,
+            "sd": 0.1547084682902075,
+            "ci95": [
+              -0.0017421784500281094,
+              0.12095236215326517
+            ],
+            "pos_worlds": 16,
+            "sign_p": 0.15158963203430176
+          }
+        }
+      }
+    }
+  }
+}

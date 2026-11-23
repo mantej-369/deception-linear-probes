@@ -11,6 +11,9 @@
 - Llama L23 RAW: off-policy `+0.645` (40/40) -> on-policy `-1.151` (0/40); PrefAUC `0.9347` (L10 `0.9706`)
 
 ## Phase 4A: Fixed-Honest Disentanglement
+- Label-mapping audit (`prior_favors_false`, `is_true`, `label`): Qwen `0/1536` mismatches; Llama `0/1536` mismatches
+- Qwen manipulation check (`fewshot_streak` honest): `prior_favors_true` mean_lo=`-12.322` (`lo>0`: `0/96`) vs `prior_favors_false` mean_lo=`+5.453` (`lo>0`: `84/96`); paired `delta_lo=+17.775` (`24/24` pos, `p=1.192e-07`); pair_mass `0.800` / `0.774`
+- Llama manipulation check (anti-prior repulsion, `all_mechanisms` honest): `prior_favors_true` mean_lo=`+0.476` (`lo>0`: `112/192`) vs `prior_favors_false` mean_lo=`-2.380` (`lo>0`: `26/192`); paired `delta_lo=-2.856` (`1/24` pos, `p=2.980e-06`); by mechanism: `fewshot_streak` `delta_lo=-4.280` (pair_mass `0.247`/`0.317`), `draft_autofill` `delta_lo=-1.432` (pair_mass `0.493`/`0.573`)
 - Qwen L24 RAW (fewshot_streak): lo<=0 `+1.886` -> lo>0 `-0.631` (r=+0.738, int@0=+0.338)
 - Qwen L24 STD (fewshot_streak): lo<=0 `+1.217` -> lo>0 `+0.537` (int@0=+0.819); LOFO delta `+0.0972` (7/8 fams)
 - Llama L19 RAW (all honest): lo<=0 `+0.182` -> lo>0 `-0.217` (r=+0.544, int@0=-0.041)

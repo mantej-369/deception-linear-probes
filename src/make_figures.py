@@ -31,6 +31,17 @@ def _load_jsonl(path: Path) -> list[dict[str, Any]]:
     return [json.loads(ln) for ln in path.read_text(encoding="utf-8").splitlines() if ln.strip()]
 
 
+def _audit_phase4a_labels(items: list[dict[str, Any]]) -> dict[str, int]:
+    """Verify Phase 4A label invariants across all rows (ruling out label-mapping bugs)."""
+    mismatches = 0
+    for r in items:
+        expected_pff = int(r["prior_choice"] != r["world_truth"])
+        expected_true = int(r["answer_choice"] == r["world_truth"])
+        if int(r["prior_favors_false"]) != expected_pff or int(r["is_true"]) != expected_true or int(r["label"]) != (1 - expected_true):
+            mismatches += 1
+    return {"n_rows": len(items), "label_consistency_mismatches": mismatches}
+
+
 def collect_verified_tables(results_root: Path = Path("results")) -> dict[str, Any]:
     """Read committed Phase 1-4 JSON/JSONLs and compute exact manuscript tables with zero hand-transcription."""
     q_rev = _load_json(results_root / "phase1_phase2_qwen3b/reversible_v1/summary.json")
@@ -175,6 +186,20 @@ def collect_verified_tables(results_root: Path = Path("results")) -> dict[str, A
             "llama_L23_raw": l_p3["layers_raw"]["23"],
             "llama_L23_pref_auc": l_p3["prefix_directive_offset_raw"]["23"]["auroc_lie_vs_hon_w_perp"],
             "llama_L10_pref_auc": l_p3["prefix_directive_offset_raw"]["10"]["auroc_lie_vs_hon_w_perp"],
+        },
+        "phase4a_manipulation_check": {
+            "qwen_L24": {
+                "label_audit": _audit_phase4a_labels(q_p4a_items),
+                "fewshot_streak__honest": q_p4a_sum["manipulation_check"]["fewshot_streak__honest"],
+                "draft_autofill__honest": q_p4a_sum["manipulation_check"]["draft_autofill__honest"],
+                "all_mechanisms__honest": q_p4a_sum["manipulation_check"]["all_mechanisms__honest"],
+            },
+            "llama_L19": {
+                "label_audit": _audit_phase4a_labels(l_p4a_items),
+                "fewshot_streak__honest": l_p4a_sum["manipulation_check"]["fewshot_streak__honest"],
+                "draft_autofill__honest": l_p4a_sum["manipulation_check"]["draft_autofill__honest"],
+                "all_mechanisms__honest": l_p4a_sum["manipulation_check"]["all_mechanisms__honest"],
+            },
         },
         "phase4a_mechanism_lofo": {
             "qwen_L24": _p4a_mech_lofo(q_p4a_items, 24),
@@ -556,6 +581,8 @@ def format_verified_markdown(tables: dict[str, Any]) -> str:
     p = tables["provenance"]
     p3 = tables["phase3_mirror"]
     p4a = tables["phase4a_disentangle_primary"]
+    mc_q = tables["phase4a_manipulation_check"]["qwen_L24"]
+    mc_l = tables["phase4a_manipulation_check"]["llama_L19"]
     p4b_q = tables["phase4b_decomposition"]["qwen_L24"]
     p4b_l = tables["phase4b_decomposition"]["llama_L19"]
 
@@ -573,6 +600,9 @@ def format_verified_markdown(tables: dict[str, Any]) -> str:
         f"- Llama L23 RAW: off-policy `{p3['llama_L23_raw']['cover_honest_all']['w_dec']['mean']:+.3f}` ({p3['llama_L23_raw']['cover_honest_all']['w_dec']['pos_worlds']}/40) -> on-policy `{p3['llama_L23_raw']['cover_lie_verified_flips']['w_dec']['mean']:+.3f}` ({p3['llama_L23_raw']['cover_lie_verified_flips']['w_dec']['pos_worlds']}/40); PrefAUC `{p3['llama_L23_pref_auc']:.4f}` (L10 `{p3['llama_L10_pref_auc']:.4f}`)",
         "",
         "## Phase 4A: Fixed-Honest Disentanglement",
+        f"- Label-mapping audit (`prior_favors_false`, `is_true`, `label`): Qwen `{mc_q['label_audit']['label_consistency_mismatches']}/{mc_q['label_audit']['n_rows']}` mismatches; Llama `{mc_l['label_audit']['label_consistency_mismatches']}/{mc_l['label_audit']['n_rows']}` mismatches",
+        f"- Qwen manipulation check (`fewshot_streak` honest): `prior_favors_true` mean_lo=`{mc_q['fewshot_streak__honest']['mean_lo_prior_true']:+.3f}` (`lo>0`: `{mc_q['fewshot_streak__honest']['n_lo_pos_prior_true']}/{mc_q['fewshot_streak__honest']['n_pairs_prior_true']}`) vs `prior_favors_false` mean_lo=`{mc_q['fewshot_streak__honest']['mean_lo_prior_false']:+.3f}` (`lo>0`: `{mc_q['fewshot_streak__honest']['n_lo_pos_prior_false']}/{mc_q['fewshot_streak__honest']['n_pairs_prior_false']}`); paired `delta_lo={mc_q['fewshot_streak__honest']['paired_delta_lo']['mean']:+.3f}` (`{mc_q['fewshot_streak__honest']['paired_delta_lo']['pos_worlds']}/24` pos, `p={mc_q['fewshot_streak__honest']['paired_delta_lo']['sign_p']:.3e}`); pair_mass `{mc_q['fewshot_streak__honest']['mean_pair_mass_prior_true']:.3f}` / `{mc_q['fewshot_streak__honest']['mean_pair_mass_prior_false']:.3f}`",
+        f"- Llama manipulation check (anti-prior repulsion, `all_mechanisms` honest): `prior_favors_true` mean_lo=`{mc_l['all_mechanisms__honest']['mean_lo_prior_true']:+.3f}` (`lo>0`: `{mc_l['all_mechanisms__honest']['n_lo_pos_prior_true']}/{mc_l['all_mechanisms__honest']['n_pairs_prior_true']}`) vs `prior_favors_false` mean_lo=`{mc_l['all_mechanisms__honest']['mean_lo_prior_false']:+.3f}` (`lo>0`: `{mc_l['all_mechanisms__honest']['n_lo_pos_prior_false']}/{mc_l['all_mechanisms__honest']['n_pairs_prior_false']}`); paired `delta_lo={mc_l['all_mechanisms__honest']['paired_delta_lo']['mean']:+.3f}` (`{mc_l['all_mechanisms__honest']['paired_delta_lo']['pos_worlds']}/24` pos, `p={mc_l['all_mechanisms__honest']['paired_delta_lo']['sign_p']:.3e}`); by mechanism: `fewshot_streak` `delta_lo={mc_l['fewshot_streak__honest']['paired_delta_lo']['mean']:+.3f}` (pair_mass `{mc_l['fewshot_streak__honest']['mean_pair_mass_prior_true']:.3f}`/`{mc_l['fewshot_streak__honest']['mean_pair_mass_prior_false']:.3f}`), `draft_autofill` `delta_lo={mc_l['draft_autofill__honest']['paired_delta_lo']['mean']:+.3f}` (pair_mass `{mc_l['draft_autofill__honest']['mean_pair_mass_prior_true']:.3f}`/`{mc_l['draft_autofill__honest']['mean_pair_mass_prior_false']:.3f}`)",
         f"- Qwen L24 RAW (fewshot_streak): lo<=0 `{p4a['qwen_fewshot_honest_raw']['realized_false_unexpected_lo_le_0']['mean']:+.3f}` -> lo>0 `{p4a['qwen_fewshot_honest_raw']['realized_false_expected_lo_gt_0']['mean']:+.3f}` (r={p4a['qwen_fewshot_honest_raw']['ols_diff_on_surprisal']['pearson_r']:+.3f}, int@0={p4a['qwen_fewshot_honest_raw']['ols_diff_on_surprisal']['intercept_at_zero']:+.3f})",
         f"- Qwen L24 STD (fewshot_streak): lo<=0 `{p4a['qwen_fewshot_honest_std']['realized_false_unexpected_lo_le_0']['mean']:+.3f}` -> lo>0 `{p4a['qwen_fewshot_honest_std']['realized_false_expected_lo_gt_0']['mean']:+.3f}` (int@0={p4a['qwen_fewshot_honest_std']['ols_diff_on_surprisal']['intercept_at_zero']:+.3f}); LOFO delta `{tables['phase4a_mechanism_lofo']['qwen_L24']['L24_dec_std']['fewshot_streak']['honest']['delta']:+.4f}` ({tables['phase4a_mechanism_lofo']['qwen_L24']['L24_dec_std']['fewshot_streak']['honest']['fams_up']}/8 fams)",
         f"- Llama L19 RAW (all honest): lo<=0 `{p4a['llama_all_honest_raw']['realized_false_unexpected_lo_le_0']['mean']:+.3f}` -> lo>0 `{p4a['llama_all_honest_raw']['realized_false_expected_lo_gt_0']['mean']:+.3f}` (r={p4a['llama_all_honest_raw']['ols_diff_on_surprisal']['pearson_r']:+.3f}, int@0={p4a['llama_all_honest_raw']['ols_diff_on_surprisal']['intercept_at_zero']:+.3f})",

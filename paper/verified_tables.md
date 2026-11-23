@@ -5,10 +5,12 @@
 - Llama-3.2-3B-Instruct HF SHA: `006f5dcd1393c3add266de40994ba96225e9689d`
 - Git commits: Phase 1 `a561a99`, Phase 3 Qwen `67e6107`, Llama P1-3 `12861bf`, Phase 4 `0a37cb0`
 
-## Phase 3: Cross-Family Mirror-Image Inversion (80/80 Flips)
-- Qwen L24 RAW: off-policy `+3.713` (40/40) -> on-policy `-2.759` (0/40); PrefAUC `0.9839`
-- Qwen L25 STD: off-policy `+3.624` (40/40) -> on-policy `-3.637` (0/40)
-- Llama L23 RAW: off-policy `+0.645` (40/40) -> on-policy `-1.151` (0/40); PrefAUC `0.9347` (L10 `0.9706`)
+## Phase 3: Cross-Family Mirror-Image Inversion (80/80 Flips; Frozen Primary Layers)
+- **Qwen L24 RAW (frozen primary):** off-policy `+3.713` (40/40, p=1.82e-12) -> on-policy `-2.759` (0/40, p=1.82e-12); `w_perp` `-1.954` (0/40); PrefAUC `0.9839`
+- **Qwen L24 STD (frozen primary):** off-policy `+4.023` (40/40) -> on-policy `-3.853` (0/40); `w_perp` `-2.878` (0/40)
+- **Llama L19 RAW (frozen primary):** off-policy `+0.132` (35/40, p=1.38e-06) -> on-policy `-0.618` (0/40, p=1.82e-12); `w_perp` `-0.581` (0/40); PrefAUC `0.7606`
+- **Llama L19 STD (frozen primary):** off-policy `+0.225` (26/40, p=8.07e-02) -> on-policy `-1.313` (0/40, p=1.82e-12); `w_perp` `-1.174` (0/40)
+- *Secondary sweep reference points (not primary):* Llama L23 RAW (late-layer PrefAUC local peak) `+0.645` (40/40) -> `-1.151` (0/40), PrefAUC `0.9347` (early-layer PrefAUC peak L10 `0.9706`); Llama peak-magnitude late layers L26 RAW `+1.500` (40/40) -> `-2.167` (0/40) and L27 RAW `+2.414` (38/40) -> `-3.932` (0/40); Qwen L25 STD `+3.624` (40/40) -> `-3.637` (0/40)
 
 ## Phase 4A: Fixed-Honest Disentanglement
 - Label-mapping audit (`prior_favors_false`, `is_true`, `label`): Qwen `0/1536` mismatches; Llama `0/1536` mismatches

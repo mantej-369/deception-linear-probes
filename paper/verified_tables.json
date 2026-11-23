@@ -1827,7 +1827,9 @@
             "delta": 0.0038000000000000256,
             "fams_up": 3,
             "n_fams": 8,
-            "sign_p": 0.21875
+            "sign_p": 0.21875,
+            "fixed_sign_probe_auroc": 0.7636,
+            "mean_diff_false_minus_true": 1.4670258502786357
           },
           "distort": {
             "prob": 0.8564,
@@ -1836,7 +1838,9 @@
             "delta": 9.999999999998899e-05,
             "fams_up": 1,
             "n_fams": 8,
-            "sign_p": 0.625
+            "sign_p": 0.625,
+            "fixed_sign_probe_auroc": 0.4572,
+            "mean_diff_false_minus_true": -0.2519281514299414
           }
         },
         "fewshot_streak": {
@@ -1848,7 +1852,9 @@
             "delta": 0.09720000000000006,
             "fams_up": 7,
             "n_fams": 8,
-            "sign_p": 0.00012111663818359375
+            "sign_p": 0.00012111663818359375,
+            "fixed_sign_probe_auroc": 0.78,
+            "mean_diff_false_minus_true": 0.9371071370163312
           },
           "distort": {
             "prob": 0.6772,
@@ -1857,7 +1863,9 @@
             "delta": 0.0008000000000000229,
             "fams_up": 4,
             "n_fams": 8,
-            "sign_p": 0.0783538818359375
+            "sign_p": 0.0783538818359375,
+            "fixed_sign_probe_auroc": 0.5285,
+            "mean_diff_false_minus_true": 0.13776583084836602
           }
         }
       },
@@ -1871,7 +1879,9 @@
             "delta": 0.0022999999999999687,
             "fams_up": 3,
             "n_fams": 8,
-            "sign_p": 0.21875
+            "sign_p": 0.21875,
+            "fixed_sign_probe_auroc": 0.8067,
+            "mean_diff_false_minus_true": 1.14593449793756
           },
           "distort": {
             "prob": 0.8564,
@@ -1880,7 +1890,9 @@
             "delta": -0.00040000000000006697,
             "fams_up": 1,
             "n_fams": 8,
-            "sign_p": 1.0
+            "sign_p": 1.0,
+            "fixed_sign_probe_auroc": 0.4287,
+            "mean_diff_false_minus_true": -0.2817598752832662
           }
         },
         "fewshot_streak": {
@@ -1892,7 +1904,9 @@
             "delta": 0.00880000000000003,
             "fams_up": 4,
             "n_fams": 8,
-            "sign_p": 0.09625244140625
+            "sign_p": 0.09625244140625,
+            "fixed_sign_probe_auroc": 0.6847,
+            "mean_diff_false_minus_true": 0.7638740815067042
           },
           "distort": {
             "prob": 0.6772,
@@ -1901,7 +1915,9 @@
             "delta": 0.025000000000000022,
             "fams_up": 8,
             "n_fams": 8,
-            "sign_p": 0.00022125244140625
+            "sign_p": 0.00022125244140625,
+            "fixed_sign_probe_auroc": 0.5139,
+            "mean_diff_false_minus_true": 0.0934742190875113
           }
         }
       }
@@ -1917,7 +1933,9 @@
             "delta": -0.0016000000000000458,
             "fams_up": 2,
             "n_fams": 8,
-            "sign_p": 0.3876953125
+            "sign_p": 0.3876953125,
+            "fixed_sign_probe_auroc": 0.5795,
+            "mean_diff_false_minus_true": 0.21468055710041267
           },
           "distort": {
             "prob": 0.4549,
@@ -1926,7 +1944,9 @@
             "delta": 0.020699999999999996,
             "fams_up": 5,
             "n_fams": 8,
-            "sign_p": 0.022655844688415527
+            "sign_p": 0.022655844688415527,
+            "fixed_sign_probe_auroc": 0.4845,
+            "mean_diff_false_minus_true": -0.04136164868638548
           }
         },
         "fewshot_streak": {
@@ -1938,7 +1958,9 @@
             "delta": 0.012699999999999934,
             "fams_up": 5,
             "n_fams": 8,
-            "sign_p": 0.4048728942871094
+            "sign_p": 0.4048728942871094,
+            "fixed_sign_probe_auroc": 0.5926,
+            "mean_diff_false_minus_true": 0.2958409176208079
           },
           "distort": {
             "prob": 0.603,
@@ -1947,7 +1969,9 @@
             "delta": 0.0,
             "fams_up": 4,
             "n_fams": 8,
-            "sign_p": 0.14599609375
+            "sign_p": 0.14599609375,
+            "fixed_sign_probe_auroc": 0.5202,
+            "mean_diff_false_minus_true": 0.06645534924852348
           }
         }
       },
@@ -1961,7 +1985,9 @@
             "delta": 0.0042999999999999705,
             "fams_up": 5,
             "n_fams": 8,
-            "sign_p": 0.210113525390625
+            "sign_p": 0.210113525390625,
+            "fixed_sign_probe_auroc": 0.5294,
+            "mean_diff_false_minus_true": 0.03570676998545741
           },
           "distort": {
             "prob": 0.4549,
@@ -1970,7 +1996,9 @@
             "delta": 0.21389999999999992,
             "fams_up": 8,
             "n_fams": 8,
-            "sign_p": 2.9802322387695312e-06
+            "sign_p": 2.9802322387695312e-06,
+            "fixed_sign_probe_auroc": 0.3301,
+            "mean_diff_false_minus_true": -0.15930775087326765
           }
         },
         "fewshot_streak": {
@@ -1982,7 +2010,9 @@
             "delta": -0.000200000000000089,
             "fams_up": 4,
             "n_fams": 8,
-            "sign_p": 0.454498291015625
+            "sign_p": 0.454498291015625,
+            "fixed_sign_probe_auroc": 0.5328,
+            "mean_diff_false_minus_true": 0.04848211181039619
           },
           "distort": {
             "prob": 0.603,
@@ -1991,7 +2021,9 @@
             "delta": 0.06979999999999997,
             "fams_up": 7,
             "n_fams": 8,
-            "sign_p": 0.0014896392822265625
+            "sign_p": 0.0014896392822265625,
+            "fixed_sign_probe_auroc": 0.405,
+            "mean_diff_false_minus_true": -0.09213826137905312
           }
         }
       }

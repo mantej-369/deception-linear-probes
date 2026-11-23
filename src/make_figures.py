@@ -342,8 +342,8 @@ def plot_fig2_phase4a_disentanglement(results_root: Path, tables: dict[str, Any]
 
     # Top row: Fixed honest directive, paired (False - True) vs pre-answer log_odds for dec_raw & dec_std
     top_specs = [
-        (0, "Qwen2.5-3B L24 — Fixed Honest (fewshot_streak)", q_items, 24, {"fewshot_streak"}),
-        (1, "Llama-3.2-3B L19 — Fixed Honest (all mechanisms)", l_items, 19, {"draft_autofill", "fewshot_streak"}),
+        (0, "Qwen2.5-3B L24 — Fixed Honest (fewshot_streak, n=192 pairs)", q_items, 24, {"fewshot_streak"}),
+        (1, "Llama-3.2-3B L19 — Fixed Honest (all mechanisms, n=384 pairs)", l_items, 19, {"draft_autofill", "fewshot_streak"}),
     ]
 
     for col, title, items, L, mechs in top_specs:
@@ -353,31 +353,32 @@ def plot_fig2_phase4a_disentanglement(results_root: Path, tables: dict[str, Any]
             if r["directive"] == "honest" and r["mechanism"] in mechs:
                 grouped[r["pair_key"]][int(r["label"])] = r
 
-        los, d_raw, d_std = [], [], []
+        surps, d_raw, d_std = [], [], []
         for pk, d in grouped.items():
             if 0 in d and 1 in d:
-                los.append(float(d[0]["pair_log_odds"]))
+                # Relative surprisal of False over True: log P(True)/P(False) = -pair_log_odds
+                surps.append(-float(d[0]["pair_log_odds"]))
                 d_raw.append(float(d[1]["scores"][f"L{L}_dec_raw"]["answer_tok"] - d[0]["scores"][f"L{L}_dec_raw"]["answer_tok"]))
                 d_std.append(float(d[1]["scores"][f"L{L}_dec_std"]["answer_tok"] - d[0]["scores"][f"L{L}_dec_std"]["answer_tok"]))
 
-        los_a, raw_a, std_a = np.array(los), np.array(d_raw), np.array(d_std)
+        surp_a, raw_a, std_a = np.array(surps), np.array(d_raw), np.array(d_std)
         ax.axhline(0.0, color="#222222", lw=0.9)
         ax.axvline(0.0, color="#222222", lw=0.9, ls="--")
 
-        ax.scatter(los_a, raw_a, color=C_VERM, alpha=0.28, s=16, edgecolors="none", label=f"L{L} dec_raw (pairs)")
-        ax.scatter(los_a, std_a, color=C_BLUE, alpha=0.28, s=16, marker="^", edgecolors="none", label=f"L{L} dec_std (pairs)")
+        ax.scatter(surp_a, raw_a, color=C_VERM, alpha=0.28, s=16, edgecolors="none", label=f"L{L} dec_raw (pairs)")
+        ax.scatter(surp_a, std_a, color=C_BLUE, alpha=0.28, s=16, marker="^", edgecolors="none", label=f"L{L} dec_std (pairs)")
 
-        x_grid = np.linspace(float(los_a.min()), float(los_a.max()), 100)
+        x_grid = np.linspace(float(surp_a.min()), float(surp_a.max()), 100)
         for arr, color, lbl in [(raw_a, C_VERM, "dec_raw OLS"), (std_a, C_BLUE, "dec_std OLS")]:
-            slope, inter = np.polyfit(los_a, arr, 1)
-            r_val = float(np.corrcoef(-los_a, arr)[0, 1])
+            slope, inter = np.polyfit(surp_a, arr, 1)
+            r_val = float(np.corrcoef(surp_a, arr)[0, 1])
             ax.plot(x_grid, slope * x_grid + inter, color=color, lw=2.2, label=f"{lbl}: int@0={inter:+.2f}, r={r_val:+.2f}")
 
         ax.set_title(title)
-        ax.set_xlabel(r"Pre-answer $\log\frac{P(\mathrm{False})}{P(\mathrm{True})}$ (right of 0 = False expected)")
+        ax.set_xlabel(r"Pre-answer relative surprisal $\log\frac{P(\mathrm{True})}{P(\mathrm{False})}$ (left of 0 = False expected)")
         if col == 0:
             ax.set_ylabel("Paired False − True at answer_tok")
-        ax.legend(loc="upper right", frameon=True, framealpha=0.92, fontsize=7.5)
+        ax.legend(loc="upper left", frameon=True, framealpha=0.92, fontsize=7.5)
 
     # Bottom row: Mechanism-separated LOFO incremental AUROC over probability baseline
     bot_specs = [
@@ -412,11 +413,11 @@ def plot_fig2_phase4a_disentanglement(results_root: Path, tables: dict[str, Any]
 
         ax.set_xticks(x)
         ax.set_xticklabels([c[0] for c in cats], fontsize=8.0)
-        ax.set_ylim(0.40, 1.10)
+        ax.set_ylim(0.40, 1.18)
         ax.set_title(title)
         if col == 0:
             ax.set_ylabel("Pooled LOFO AUROC")
-        ax.legend(loc="lower right", frameon=True, framealpha=0.92, fontsize=7.5)
+        ax.legend(loc="upper left", frameon=True, framealpha=0.92, fontsize=7.5)
 
     fig.suptitle("Phase 4A: Fixed-Directive Expectation Disentanglement (*Draft contains lexical anchor on Qwen)", fontsize=11.5, fontweight="bold", y=1.01)
     fig.tight_layout()

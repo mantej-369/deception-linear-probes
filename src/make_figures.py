@@ -399,12 +399,13 @@ def plot_fig1_surprisal_inversion(results_root: Path, out_dir: Path) -> None:
         ax_top.plot(xs, ben_m, color=C_ORANGE, lw=1.6, ls="-.", label="Zero-deception surprisal (benign)")
         ax_top.fill_between(xs, ben_lo, ben_hi, color=C_ORANGE, alpha=0.12)
 
+        from matplotlib.ticker import MaxNLocator
+
         ax_top.set_title(title)
+        ax_top.xaxis.set_major_locator(MaxNLocator(integer=True))
         if col == 0:
             ax_top.set_ylabel("Paired False − True at answer_tok (raw)")
-            ax_top.legend(loc="lower left", frameon=True, framealpha=0.92)
-        else:
-            ax_top.legend(loc="lower left", frameon=True, framealpha=0.92)
+        ax_top.legend(loc="lower left", frameon=True, framealpha=0.92)
 
         # Bottom row: Pre-answer directive AUROC at prefix_end
         p_dec = [data["prefix_directive_offset_raw"][str(L)]["auroc_lie_vs_hon_w_dec"] for L in layers]
@@ -413,11 +414,13 @@ def plot_fig1_surprisal_inversion(results_root: Path, out_dir: Path) -> None:
         ax_bot.axvline(primary_L, color=C_GREY, lw=1.0, ls=":")
         ax_bot.plot(xs, p_dec, color=C_GREEN, lw=2.0, marker="o", ms=3.2, label="Pre-answer directive AUROC ($w_{\\mathrm{dec}}$)")
         ax_bot.plot(xs, p_prp, color=C_SKY, lw=1.6, ls="--", label="Pre-answer directive AUROC ($w_{\\perp\\mathrm{surp}}$)")
-        ax_bot.set_ylim(0.15, 1.05)
+        ax_bot.set_ylim(0.10, 1.06)
+        ax_bot.set_yticks([0.2, 0.4, 0.6, 0.8, 1.0])
+        ax_bot.xaxis.set_major_locator(MaxNLocator(integer=True))
         ax_bot.set_xlabel("Transformer layer")
         if col == 0:
             ax_bot.set_ylabel("prefix_end AUROC\n(cover_lie vs cover_honest)")
-        ax_bot.legend(loc="lower right", frameon=True, framealpha=0.92)
+        ax_bot.legend(loc="lower center", frameon=True, framealpha=0.92)
 
     fig.suptitle("Cross-Family Teacher-Forcing Surprisal Inversion (80/80 Verified On-Policy Flips)", fontsize=12, fontweight="bold", y=1.01)
     fig.tight_layout()

@@ -44,6 +44,20 @@ class TestPhase3PrimaryLayerAudit(unittest.TestCase):
         self.assertIn("PrefAUC `0.7606`", ledger)
         self.assertIn("late-layer PrefAUC local peak `L23 RAW`", ledger)
 
+    def test_fig1_prefix_auroc_no_legend_occlusion_and_integer_ticks(self) -> None:
+        import json
+
+        src = Path("src/make_figures.py").read_text(encoding="utf-8")
+        self.assertIn("ax_bot.set_ylim(0.10, 1.06)", src)
+        self.assertIn("ax_bot.legend(loc=\"lower center\"", src)
+        self.assertIn("MaxNLocator(integer=True)", src)
+
+        q_p3 = json.loads(Path("results/phase3_surprisal_qwen3b/summary.json").read_text(encoding="utf-8"))
+        l33_dec = q_p3["prefix_directive_offset_raw"]["33"]["auroc_lie_vs_hon_w_dec"]
+        l33_prp = q_p3["prefix_directive_offset_raw"]["33"]["auroc_lie_vs_hon_w_perp"]
+        self.assertGreater(l33_dec, 0.10)
+        self.assertGreater(l33_prp, 0.10)
+
 
 if __name__ == "__main__":
     unittest.main()

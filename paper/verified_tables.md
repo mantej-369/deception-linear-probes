@@ -20,9 +20,10 @@
 - Qwen L24 STD (fewshot_streak): lo<=0 `+1.217` -> lo>0 `+0.537` (int@0=+0.819); LOFO delta `+0.0972` (7/8 fams)
 - Llama L19 RAW (all honest): lo<=0 `+0.182` -> lo>0 `-0.217` (r=+0.544, int@0=-0.041)
 
-## Phase 4B: Free-Generation Monitoring Decomposition
-- Qwen L24: cross-arm header `1.0000`, claim-header `0.5763`; within-incentive header `0.4017`, gen_mean `0.6154`
-- Llama L19: cross-arm header `1.0000`, claim-header `0.1868`; within-incentive header `0.3132`, gen_mean `0.6566`
+## Phase 4B: Free-Generation Monitoring Decomposition (Provisional Regex Grading; 5% Benign FPR Primary)
+- Qwen L24: benign->honest (+25.2 tok) `header_std` `-2.476` -> `-2.509` (`z=-0.38 SE`); cross-arm `prompt_len=1.0000`, `header=1.0000`, `claim-hdr=0.5763`; within-incentive `prompt_len=0.6353`, `header=0.4017`, `gen_mean=0.6154`; @5% benign FPR `gen_mean_std` flags `2/40` all honest-arm (`0/26` clean-true) and `27/27` vs `13/13` inside `pressured_incentive`
+- Llama L19: benign->honest (+25.2 tok) `header_std` `-3.282` -> `-5.391` (`z=-14.95 SE`, not invariant); cross-arm `prompt_len=1.0000`, `header=1.0000`, `claim-hdr=0.1868`; within-incentive `prompt_len=0.5508`, `header=0.3132`, `gen_mean=0.6566`; @5% benign FPR `gen_mean_std` flags `0/40` honest-arm and `13/14` vs `17/26` inside `pressured_incentive`
+- Within `pressured_incentive` regex stratification (0 refusals in both models): Qwen `unqualified_false` (n=27) `hdr_std=+2.134` vs `both_mentioned` (n=9, `+2.296`) and `neither` (n=3, `+2.409`); Llama `unqualified_false` (n=14) `hdr_std=-1.551` vs `clean_true` (n=4, `-1.445`), `both_mentioned` (n=16, `-1.021`), `false_with_disclosure` (n=3, `-0.981`), `neither` (n=3, `-0.450`)
 
 ## Phase 2: Steering Axis Overlap
 - Qwen L24 cos(dec_raw, cmp_raw) = `-0.1969`

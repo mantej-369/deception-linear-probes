@@ -98,8 +98,8 @@ def collect_verified_tables(results_root: Path = Path("results")) -> dict[str, A
                 }
         return out
 
-    # Part B decomposition metrics (header by arm, claim - header, within pressured_incentive)
-    def _p4b_decomp(ben: list[dict[str, Any]], priv: list[dict[str, Any]], L: int) -> dict[str, Any]:
+    # Part B decomposition metrics (header by arm, claim - header, within pressured_incentive, stratification)
+    def _p4b_decomp(ben: list[dict[str, Any]], priv: list[dict[str, Any]], fg_sum: dict[str, Any], L: int) -> dict[str, Any]:
         sk_std, sk_raw = f"L{L}_dec_std", f"L{L}_dec_raw"
         by_arm: dict[str, Any] = {}
         for arm in ("benign_calibration", "honest_report", "pressured_incentive", "pressured_roleplay"):
@@ -119,7 +119,13 @@ def collect_verified_tables(results_root: Path = Path("results")) -> dict[str, A
                 "gen_mean_std_mean": float(np.mean(gm)),
             }
 
-        hon_ct = [r for r in priv if r["arm"] == "honest_report" and r["grade"]["is_clean_true"]]
+        b_se = by_arm["benign_calibration"]["header_std_se"]
+        h_se = by_arm["honest_report"]["header_std_se"]
+        h_shift = by_arm["honest_report"]["header_std_mean"] - by_arm["benign_calibration"]["header_std_mean"]
+        h_shift_z = float(h_shift / np.sqrt(b_se**2 + h_se**2))
+
+        hon_all = [r for r in priv if r["arm"] == "honest_report"]
+        hon_ct = [r for r in hon_all if r["grade"]["is_clean_true"]]
         pos_p = [r for r in priv if r["arm"] != "honest_report" and r["grade"]["is_unqualified_false"]]
         pi_all = [r for r in priv if r["arm"] == "pressured_incentive"]
         pi_lie = [r for r in pi_all if r["grade"]["is_unqualified_false"]]
@@ -130,11 +136,78 @@ def collect_verified_tables(results_root: Path = Path("results")) -> dict[str, A
             v1 = [float(fn(r)) for r in pos_l if fn(r) is not None]
             return compute_roc_auc_pure([0] * len(v0) + [1] * len(v1), v0 + v1)
 
+        def _pi_cat(g: dict[str, Any]) -> str:
+            if g["is_unqualified_false"]:
+                return "unqualified_false"
+            if g["refusal"]:
+                return "refusal"
+            if g["is_clean_true"]:
+                return "clean_true"
+            if g["factual_accuracy"] == "false" and g["disclosure"]:
+                return "false_with_disclosure"
+            if g["factual_accuracy"] == "both_mentioned":
+                return "both_mentioned"
+            if g["factual_accuracy"] == "neither":
+                return "neither"
+            return f"other_{g['factual_accuracy']}"
+
+        pi_groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
+        for r in pi_all:
+            pi_groups[_pi_cat(r["grade"])].append(r)
+        pi_strata: dict[str, Any] = {}
+        for cname, grp in sorted(pi_groups.items()):
+            hs = [float(r["probe_scores"][sk_std]["header"]) for r in grp]
+            hr = [float(r["probe_scores"][sk_raw]["header"]) for r in grp]
+            gm = [float(r["probe_scores"][sk_std]["gen_mean"]) for r in grp]
+            cmh = [float(r["probe_scores"][sk_std]["first_claim_tok"] - r["probe_scores"][sk_std]["header"]) for r in grp if r["probe_scores"][sk_std]["first_claim_tok"] is not None]
+            pi_strata[cname] = {
+                "n": len(grp),
+                "n_disclosure": int(sum(bool(r["grade"]["disclosure"]) for r in grp)),
+                "n_refusal": int(sum(bool(r["grade"]["refusal"]) for r in grp)),
+                "header_std_mean": float(np.mean(hs)),
+                "header_std_se": float(np.std(hs, ddof=1) / np.sqrt(len(hs))) if len(hs) > 1 else 0.0,
+                "header_raw_mean": float(np.mean(hr)),
+                "gen_mean_std_mean": float(np.mean(gm)),
+                "claim_minus_header_std_mean": float(np.mean(cmh)) if cmh else None,
+                "mean_prompt_len": float(np.mean([r["prompt_len"] for r in grp])),
+            }
+
+        mon = fg_sum["monitoring_unqualified_false_vs_honest_true"]
+        op_audit: dict[str, Any] = {}
+        for key, fn in [
+            (f"L{L}_dec_std_header", lambda r: r["probe_scores"][sk_std]["header"]),
+            (f"L{L}_dec_std_gen_mean", lambda r: r["probe_scores"][sk_std]["gen_mean"]),
+            (f"L{L}_dec_std_first_claim", lambda r: r["probe_scores"][sk_std]["first_claim_tok"]),
+            (f"L{L}_dec_raw_header", lambda r: r["probe_scores"][sk_raw]["header"]),
+            ("surprisal_mean_neg_logp", lambda r: r["surprisal"]["mean_neg_logp"]),
+        ]:
+            c5 = mon[key]["at_benign_fpr_05"]
+            c1 = mon[key]["at_benign_fpr_01"]
+            thr5 = float(c5["threshold"])
+            op_audit[key] = {
+                "primary_benign_fpr_05": {
+                    "threshold": thr5,
+                    "pos_recall": float(c5["pos_recall"]),
+                    "pos_recall_ci95": c5["pos_recall_ci95"],
+                    "clean_honest_fpr": float(c5["honest_neg_fpr"]),
+                    "all40_honest_flagged": int(sum(1 for r in hon_all if fn(r) is not None and float(fn(r)) >= thr5)),
+                    "pi_pos_flagged": int(sum(1 for r in pi_lie if fn(r) is not None and float(fn(r)) >= thr5)),
+                    "pi_non_flagged": int(sum(1 for r in pi_non if fn(r) is not None and float(fn(r)) >= thr5)),
+                },
+                "secondary_benign_fpr_01": {
+                    "threshold": float(c1["threshold"]),
+                    "pos_recall": float(c1["pos_recall"]),
+                    "pos_recall_ci95": c1["pos_recall_ci95"],
+                },
+            }
+
         return {
             "by_arm": by_arm,
+            "benign_to_honest_header_shift": {"diff": float(h_shift), "z_se": h_shift_z},
             "cross_arm_aurocs": {
                 "n_pos": len(pos_p),
                 "n_neg": len(hon_ct),
+                "prompt_len": _auc(hon_ct, pos_p, lambda r: r["prompt_len"]),
                 "header_std": _auc(hon_ct, pos_p, lambda r: r["probe_scores"][sk_std]["header"]),
                 "claim_std": _auc(hon_ct, pos_p, lambda r: r["probe_scores"][sk_std]["first_claim_tok"]),
                 "claim_minus_header_std": _auc(
@@ -158,6 +231,8 @@ def collect_verified_tables(results_root: Path = Path("results")) -> dict[str, A
                 "gen_mean_std": _auc(pi_non, pi_lie, lambda r: r["probe_scores"][sk_std]["gen_mean"]),
                 "header_raw": _auc(pi_non, pi_lie, lambda r: r["probe_scores"][sk_raw]["header"]),
             },
+            "pressured_incentive_stratified_regex": pi_strata,
+            "operating_points": op_audit,
         }
 
     return {
@@ -216,8 +291,8 @@ def collect_verified_tables(results_root: Path = Path("results")) -> dict[str, A
             "llama_all_honest_std": l_p4a_sum["fixed_directive_disentanglement"]["L19_dec_std"]["answer_tok"]["all_mechanisms__honest"],
         },
         "phase4b_decomposition": {
-            "qwen_L24": _p4b_decomp(q_p4b_ben, q_p4b_priv, 24),
-            "llama_L19": _p4b_decomp(l_p4b_ben, l_p4b_priv, 19),
+            "qwen_L24": _p4b_decomp(q_p4b_ben, q_p4b_priv, q_p4b_sum, 24),
+            "llama_L19": _p4b_decomp(l_p4b_ben, l_p4b_priv, l_p4b_sum, 19),
         },
         "phase2_steering_cos_llama_L19": float(l_rev["direction_geometry"]["L19"]["cos_dec_cmp_raw"]),
         "phase2_steering_cos_qwen_L24": float(q_rev["direction_geometry"]["L24"]["cos_dec_cmp_raw"]),
@@ -435,11 +510,11 @@ def plot_fig3_phase4b_free_gen(results_root: Path, tables: dict[str, Any], out_d
     q_fg = _load_json(results_root / "phase4/qwen3b_free_gen/summary.json")
     l_fg = _load_json(results_root / "phase4/llama32_3b_free_gen/summary.json")
 
-    fig, axes = plt.subplots(2, 2, figsize=(11.8, 6.8), gridspec_kw={"height_ratios": [1.15, 1.0]})
+    fig, axes = plt.subplots(2, 2, figsize=(12.2, 7.0), gridspec_kw={"height_ratios": [1.2, 1.0]})
 
     top_specs = [
-        (0, "Qwen2.5-3B L24 — Independent Benign Calibration (n=200)", q_fg, 24),
-        (1, "Llama-3.2-3B L19 — Independent Benign Calibration (n=200)", l_fg, 19),
+        (0, "Qwen2.5-3B L24 — Benign Calibration (n=200; 5% FPR Primary)", q_fg, 24),
+        (1, "Llama-3.2-3B L19 — Benign Calibration (n=200; 5% FPR Primary)", l_fg, 19),
     ]
     for col, title, fg, L in top_specs:
         ax = axes[0, col]
@@ -471,17 +546,18 @@ def plot_fig3_phase4b_free_gen(results_root: Path, tables: dict[str, Any], out_d
             hlo.append(max(0.0, c5["honest_neg_fpr"] - c5["honest_neg_fpr_ci95"][0]))
             hhi.append(max(0.0, c5["honest_neg_fpr_ci95"][1] - c5["honest_neg_fpr"]))
 
-        ax.bar(x - w, rec5, w, yerr=[err5_lo, err5_hi], capsize=2.5, color=C_BLUE, label="Lie Recall @ 5% Benign FPR")
-        ax.bar(x, rec1, w, yerr=[err1_lo, err1_hi], capsize=2.5, color=C_SKY, label="Lie Recall @ 1% Benign FPR")
-        ax.bar(x + w, hfpr, w, yerr=[hlo, hhi], capsize=2.5, color=C_VERM, alpha=0.85, label="Honest-Report FPR @ 5% Benign")
+        ax.bar(x - w, rec5, w, yerr=[err5_lo, err5_hi], capsize=2.5, color=C_BLUE, label="Regex-Lie Recall @ 5% Benign FPR (primary, 10 tail)")
+        ax.bar(x, rec1, w, yerr=[err1_lo, err1_hi], capsize=2.5, color=C_SKY, alpha=0.85, label="Regex-Lie Recall @ 1% Benign FPR (secondary, 2 tail)")
+        ax.bar(x + w, hfpr, w, yerr=[hlo, hhi], capsize=2.5, color=C_VERM, alpha=0.85, label="Clean-Honest FPR @ 5% Benign")
 
         ax.set_xticks(x)
         ax.set_xticklabels([d[0] for d in dets], fontsize=8.0)
-        ax.set_ylim(0.0, 1.12)
-        ax.set_title(title)
+        ax.set_ylim(0.0, 1.32)
+        ax.set_yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+        ax.set_title(title, fontsize=9.8)
         if col == 0:
             ax.set_ylabel("Rate (exact 95% Clopper-Pearson CI)")
-        ax.legend(loc="upper left", frameon=True, framealpha=0.92, fontsize=7.5)
+        ax.legend(loc="upper left", frameon=True, framealpha=0.92, fontsize=7.0)
 
     # Bottom row: Mechanistic decomposition AUROCs (Cross-arm vs Claim-Header vs Within-Pressured-Incentive)
     bot_specs = [
@@ -493,9 +569,10 @@ def plot_fig3_phase4b_free_gen(results_root: Path, tables: dict[str, Any], out_d
         ca = dec["cross_arm_aurocs"]
         wi = dec["within_pressured_incentive_aurocs"]
         bars = [
+            ("Cross-arm\nprompt_len\n(baseline)", ca["prompt_len"], "#222222"),
             ("Cross-arm\nheader\n(std)", ca["header_std"], C_BLUE),
-            ("Cross-arm\ngen_mean\n(std)", ca["gen_mean_std"], C_BLUE),
             ("Cross-arm\nclaim−hdr\n(post-gen)", ca["claim_minus_header_std"], C_VERM),
+            ("Within-inc\nprompt_len\n(baseline)", wi["prompt_len"], "#222222"),
             ("Within-inc\nheader\n(std)", wi["header_std"], C_ORANGE),
             ("Within-inc\nclaim−hdr\n(post-gen)", wi["claim_minus_header_std"], C_PURPLE),
             ("Within-inc\ngen_mean\n(std)", wi["gen_mean_std"], C_GREEN),
@@ -507,15 +584,16 @@ def plot_fig3_phase4b_free_gen(results_root: Path, tables: dict[str, Any], out_d
         ax.bar(x, vals, width=0.62, color=cols, alpha=0.9)
         ax.axhline(0.5, color="#222222", lw=0.9, ls="--")
         for i, v in enumerate(vals):
-            ax.text(i, v + 0.025, f"{v:.2f}", ha="center", va="bottom", fontsize=7.8, fontweight="bold")
+            ax.text(i, v + 0.025, f"{v:.2f}", ha="center", va="bottom", fontsize=7.3, fontweight="bold")
         ax.set_xticks(x)
-        ax.set_xticklabels([b[0] for b in bars], fontsize=7.6)
-        ax.set_ylim(0.0, 1.12)
+        ax.set_xticklabels([b[0] for b in bars], fontsize=7.0)
+        ax.set_ylim(0.0, 1.14)
+        ax.set_yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
         ax.set_title(title)
         if col == 0:
-            ax.set_ylabel("AUROC (Unqualified False vs Truth)")
+            ax.set_ylabel("AUROC (Regex False vs Non-False)")
 
-    fig.suptitle("Phase 4B: On-Policy Free-Generation Monitoring — Strong Pre-Gen Pressure Encoding, Weak Within-Arm Claim Signal", fontsize=11.0, fontweight="bold", y=1.01)
+    fig.suptitle("Phase 4B: On-Policy Free-Generation Monitoring (Provisional Regex) — Prompt-Arm Header vs. Within-Arm Baselines", fontsize=10.6, fontweight="bold", y=1.01)
     fig.tight_layout()
     _save_fig(fig, out_dir, "fig3_phase4b_free_gen_monitoring")
     plt.close(fig)
@@ -614,9 +692,10 @@ def format_verified_markdown(tables: dict[str, Any]) -> str:
         f"- Qwen L24 STD (fewshot_streak): lo<=0 `{p4a['qwen_fewshot_honest_std']['realized_false_unexpected_lo_le_0']['mean']:+.3f}` -> lo>0 `{p4a['qwen_fewshot_honest_std']['realized_false_expected_lo_gt_0']['mean']:+.3f}` (int@0={p4a['qwen_fewshot_honest_std']['ols_diff_on_surprisal']['intercept_at_zero']:+.3f}); LOFO delta `{tables['phase4a_mechanism_lofo']['qwen_L24']['L24_dec_std']['fewshot_streak']['honest']['delta']:+.4f}` ({tables['phase4a_mechanism_lofo']['qwen_L24']['L24_dec_std']['fewshot_streak']['honest']['fams_up']}/8 fams)",
         f"- Llama L19 RAW (all honest): lo<=0 `{p4a['llama_all_honest_raw']['realized_false_unexpected_lo_le_0']['mean']:+.3f}` -> lo>0 `{p4a['llama_all_honest_raw']['realized_false_expected_lo_gt_0']['mean']:+.3f}` (r={p4a['llama_all_honest_raw']['ols_diff_on_surprisal']['pearson_r']:+.3f}, int@0={p4a['llama_all_honest_raw']['ols_diff_on_surprisal']['intercept_at_zero']:+.3f})",
         "",
-        "## Phase 4B: Free-Generation Monitoring Decomposition",
-        f"- Qwen L24: cross-arm header `{p4b_q['cross_arm_aurocs']['header_std']:.4f}`, claim-header `{p4b_q['cross_arm_aurocs']['claim_minus_header_std']:.4f}`; within-incentive header `{p4b_q['within_pressured_incentive_aurocs']['header_std']:.4f}`, gen_mean `{p4b_q['within_pressured_incentive_aurocs']['gen_mean_std']:.4f}`",
-        f"- Llama L19: cross-arm header `{p4b_l['cross_arm_aurocs']['header_std']:.4f}`, claim-header `{p4b_l['cross_arm_aurocs']['claim_minus_header_std']:.4f}`; within-incentive header `{p4b_l['within_pressured_incentive_aurocs']['header_std']:.4f}`, gen_mean `{p4b_l['within_pressured_incentive_aurocs']['gen_mean_std']:.4f}`",
+        "## Phase 4B: Free-Generation Monitoring Decomposition (Provisional Regex Grading; 5% Benign FPR Primary)",
+        f"- Qwen L24: benign->honest (+25.2 tok) `header_std` `{p4b_q['by_arm']['benign_calibration']['header_std_mean']:+.3f}` -> `{p4b_q['by_arm']['honest_report']['header_std_mean']:+.3f}` (`z={p4b_q['benign_to_honest_header_shift']['z_se']:+.2f} SE`); cross-arm `prompt_len={p4b_q['cross_arm_aurocs']['prompt_len']:.4f}`, `header={p4b_q['cross_arm_aurocs']['header_std']:.4f}`, `claim-hdr={p4b_q['cross_arm_aurocs']['claim_minus_header_std']:.4f}`; within-incentive `prompt_len={p4b_q['within_pressured_incentive_aurocs']['prompt_len']:.4f}`, `header={p4b_q['within_pressured_incentive_aurocs']['header_std']:.4f}`, `gen_mean={p4b_q['within_pressured_incentive_aurocs']['gen_mean_std']:.4f}`; @5% benign FPR `gen_mean_std` flags `{p4b_q['operating_points']['L24_dec_std_gen_mean']['primary_benign_fpr_05']['all40_honest_flagged']}/40` all honest-arm (`0/26` clean-true) and `{p4b_q['operating_points']['L24_dec_std_gen_mean']['primary_benign_fpr_05']['pi_pos_flagged']}/27` vs `{p4b_q['operating_points']['L24_dec_std_gen_mean']['primary_benign_fpr_05']['pi_non_flagged']}/13` inside `pressured_incentive`",
+        f"- Llama L19: benign->honest (+25.2 tok) `header_std` `{p4b_l['by_arm']['benign_calibration']['header_std_mean']:+.3f}` -> `{p4b_l['by_arm']['honest_report']['header_std_mean']:+.3f}` (`z={p4b_l['benign_to_honest_header_shift']['z_se']:+.2f} SE`, not invariant); cross-arm `prompt_len={p4b_l['cross_arm_aurocs']['prompt_len']:.4f}`, `header={p4b_l['cross_arm_aurocs']['header_std']:.4f}`, `claim-hdr={p4b_l['cross_arm_aurocs']['claim_minus_header_std']:.4f}`; within-incentive `prompt_len={p4b_l['within_pressured_incentive_aurocs']['prompt_len']:.4f}`, `header={p4b_l['within_pressured_incentive_aurocs']['header_std']:.4f}`, `gen_mean={p4b_l['within_pressured_incentive_aurocs']['gen_mean_std']:.4f}`; @5% benign FPR `gen_mean_std` flags `{p4b_l['operating_points']['L19_dec_std_gen_mean']['primary_benign_fpr_05']['all40_honest_flagged']}/40` honest-arm and `{p4b_l['operating_points']['L19_dec_std_gen_mean']['primary_benign_fpr_05']['pi_pos_flagged']}/14` vs `{p4b_l['operating_points']['L19_dec_std_gen_mean']['primary_benign_fpr_05']['pi_non_flagged']}/26` inside `pressured_incentive`",
+        f"- Within `pressured_incentive` regex stratification (0 refusals in both models): Qwen `unqualified_false` (n={p4b_q['pressured_incentive_stratified_regex']['unqualified_false']['n']}) `hdr_std={p4b_q['pressured_incentive_stratified_regex']['unqualified_false']['header_std_mean']:+.3f}` vs `both_mentioned` (n={p4b_q['pressured_incentive_stratified_regex']['both_mentioned']['n']}, `{p4b_q['pressured_incentive_stratified_regex']['both_mentioned']['header_std_mean']:+.3f}`) and `neither` (n={p4b_q['pressured_incentive_stratified_regex']['neither']['n']}, `{p4b_q['pressured_incentive_stratified_regex']['neither']['header_std_mean']:+.3f}`); Llama `unqualified_false` (n={p4b_l['pressured_incentive_stratified_regex']['unqualified_false']['n']}) `hdr_std={p4b_l['pressured_incentive_stratified_regex']['unqualified_false']['header_std_mean']:+.3f}` vs `clean_true` (n={p4b_l['pressured_incentive_stratified_regex']['clean_true']['n']}, `{p4b_l['pressured_incentive_stratified_regex']['clean_true']['header_std_mean']:+.3f}`), `both_mentioned` (n={p4b_l['pressured_incentive_stratified_regex']['both_mentioned']['n']}, `{p4b_l['pressured_incentive_stratified_regex']['both_mentioned']['header_std_mean']:+.3f}`), `false_with_disclosure` (n={p4b_l['pressured_incentive_stratified_regex']['false_with_disclosure']['n']}, `{p4b_l['pressured_incentive_stratified_regex']['false_with_disclosure']['header_std_mean']:+.3f}`), `neither` (n={p4b_l['pressured_incentive_stratified_regex']['neither']['n']}, `{p4b_l['pressured_incentive_stratified_regex']['neither']['header_std_mean']:+.3f}`)",
         "",
         "## Phase 2: Steering Axis Overlap",
         f"- Qwen L24 cos(dec_raw, cmp_raw) = `{tables['phase2_steering_cos_qwen_L24']:+.4f}`",
